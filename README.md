@@ -43,21 +43,25 @@ No Kane login? `hydra demo --replay` plays a recorded run in the arena with no K
 ## Chaos library
 
 Eleven pre-validated bugs. `hydra chaos validate` applies each one, builds and boots the app, and confirms with a scripted
-ground-truth oracle that it breaks exactly the checks it declares. "Kane" is the expected referee outcome until
-`hydra chaos calibrate` measures it; MISSes are logged, not hidden.
+ground-truth oracle that it breaks exactly the checks it declares. `hydra chaos calibrate` then runs Kane's main flow
+against each bug (results in `chaos/calibration.json`). MISSes are logged, not hidden.
 
-| Bug | Class | Seed | Breaks | Kane (hypothesis) |
+**Measured with kane-cli 0.10.4: Kane caught 8 of 11 (73%).** All three misses are bugs outside the main flow's path
+(a bad email, a double click, a fixed-amount coupon), which is what the holdout flow and the spec agent are for.
+On the unmodified app, a 10-run soak passed 10/10 (≈48 credits and ≈220 s per run).
+
+| Bug | Class | Seed | Breaks | Kane (measured) |
 |---|---|---|---|---|
 | dead-pay-button | interaction | 0 | main, holdout | caught |
 | pay-500 | server | 1 | main, holdout | caught |
-| currency-format | display | 2 | main, holdout | unknown |
+| currency-format | display | 2 | main, holdout | caught |
 | off-by-one-qty | state | 3 | main, holdout | caught |
-| fixed-coupon-ignored | coupon | 4 | holdout | missed |
-| double-submit | concurrency | 6 | double-click | missed |
+| fixed-coupon-ignored | coupon | 4 | holdout | **missed** |
+| double-submit | concurrency | 6 | double-click | **missed** |
 | wrong-total | pricing | 7 | main, holdout | caught |
 | coupon-ignored | coupon | 8 | main, holdout | caught |
 | stale-cart | state | 12 | main | caught |
-| validation-bypass | validation | 14 | invalid-email | missed |
+| validation-bypass | validation | 14 | invalid-email | **missed** |
 | confirmation-amount | display | 30 | main, holdout | caught |
 
 ## Anti-cheat
