@@ -23,7 +23,35 @@ node bin/hydra.js doctor          # checks Node, Kane login, Chrome, builders, p
 node bin/hydra.js run --seed 7    # seed 7 → "wrong-total"
 ```
 
-No Kane login? `hydra demo --replay` plays a recorded run in the arena with no Kane and no LLM.
+No Kane login? `node bin/hydra.js demo --replay` opens the arena on the recordings in `demo/`, with no Kane and no LLM.
+
+## Results
+
+Recorded with kane-cli 0.10.4 on the bundled checkout app. Every run below is in `demo/` and replays in the arena.
+
+| Seed | Bug | Builder | Kane referee | Outcome |
+|---|---|---|---|---|
+| 7 | wrong-total | claude | CATCH | **Healed in 1 round**: an exact inverse of the hidden bug, then 2 fresh passes + holdout → deployed |
+| 7 | wrong-total | cheater (edits the spec) | CATCH | **Rejected**: spec hash changed, spec restored, gate refused |
+| 7 | wrong-total | hardcoder (hardcodes SAVE10 totals) | CATCH | **Never deployed**: passed the visible spec twice, then failed the hidden holdout |
+| 14 | validation-bypass | claude | **MISS** | Logged honestly: the main flow never submits a bad email |
+| 7 | wrong-total | opencode | CATCH | **Healed in 1 round**: the same one-line fix as Claude → deployed |
+
+Same seed, two builders (`hydra stats`):
+
+| Builder | Rounds to green | Time to heal | Tokens | Kane runs |
+|---|---|---|---|---|
+| claude | 1 | 593 s | 153,619 | 6 |
+| opencode (free default model) | 1 | 600 s | 399,238 (incl. cache reads) | 6 |
+
+A heal costs about 6 Kane runs (≈280 credits, no infra retries) and about 10 minutes from injection to green.
+
+**Browse the runs:** [isthatananya.github.io/hydra-kane](https://isthatananya.github.io/hydra-kane/) is a static arena exported to
+`docs/` with `hydra export-arena`, so it needs no backend and no Kane.
+
+One finding from the hardcoder run: Kane's *verdict and evidence* were right ("shipping is $8.00 and total $49.50"),
+but its prose explanation blamed a missed click that its own step log shows succeeded. Hydra therefore feeds the
+builder Kane's raw evidence lines, not just the summary.
 
 ## Commands
 
@@ -31,7 +59,8 @@ No Kane login? `hydra demo --replay` plays a recorded run in the arena with no K
 |---|---|
 | `hydra run --seed N [--builder claude] [--bug id] [--mutator] [--escalate]` | Full loop. Exit 0 healed, 1 aborted/rejected, 2 infra/config, 3 MISS |
 | `hydra replay <seed>` / `hydra demo --replay` | Replay a recorded run in the arena from the ledger and stored evidence |
-| `hydra arena` / `hydra export-arena` | Live spectator view (SSE) / static export for a public URL |
+| `hydra arena` / `hydra export-arena -o docs` | Live spectator view (SSE) / static export for a public URL (GitHub Pages) |
+| `hydra demo-pack --run <id...>` | Bundle finished runs (ledger + displayed evidence only, ~4 MB each) into `demo/` |
 | `hydra verify [--url] [--spec] [--claude-stop-hook]` | One-shot Kane check of the running app (0 pass, 1 fail, 2 infra) |
 | `hydra chaos list \| seed N \| validate \| calibrate` | Inspect the bug library, prove each bug breaks the app, measure Kane's real detection |
 | `hydra soak -n 10` | Run the main spec N times on the unmodified app and count flakes |
