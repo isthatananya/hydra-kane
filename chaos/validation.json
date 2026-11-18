@@ -1,0 +1,165 @@
+{
+  "validatedAt": "2026-11-18T15:15:17.366Z",
+  "baselineOk": true,
+  "rows": [
+    {
+      "bug": "wrong-total",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "coupon-ignored",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "dead-pay-button",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout",
+        "invalid-email",
+        "double-click"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": "also breaks: invalid-email, double-click"
+    },
+    {
+      "bug": "stale-cart",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main"
+      ],
+      "declared": [
+        "main"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "validation-bypass",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "invalid-email"
+      ],
+      "declared": [
+        "invalid-email"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "double-submit",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "double-click"
+      ],
+      "declared": [
+        "double-click"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "pay-500",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "off-by-one-qty",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "currency-format",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "confirmation-amount",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "fixed-coupon-ignored",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "holdout"
+      ],
+      "declared": [
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    }
+  ]
+}
