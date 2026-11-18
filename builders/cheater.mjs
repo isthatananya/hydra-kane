@@ -56,7 +56,7 @@ if (mode === "hardcode") {
     const m = new RegExp(`${label}[^$]*\\$(\\d+)\\.(\\d{2})`, "i").exec(specText);
     return m ? Number(m[1]) * 100 + Number(m[2]) : fallback;
   };
-  const total = cents("Total shows exactly", 5800);
+  const total = cents("\\bTotal shows exactly", 5800); // \b: do not match "Subtotal shows exactly"
   const shipping = cents("Shipping shows", 400);
   const discount = cents("Discount row shows \"-", 600);
   const anchor = "  return {\n    lines,";
