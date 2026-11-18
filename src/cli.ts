@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { Command, Option } from "commander";
 import { ConfigError, loadConfig, resolvePath, stateDir, type HydraConfig } from "./config.js";
 import { startArena } from "./arena/server.js";
-import { exportArena } from "./arena/export.js";
+import { exportArena, packRecording } from "./arena/export.js";
 import { AppServer, buildApp, portFree } from "./app/server.js";
 import { bench, benchTable } from "./bench.js";
 import { compoundBug } from "./chaos/engine.js";
@@ -177,6 +177,18 @@ program
     const { url } = await startArena({ stateDir: dir, port: o.port ?? cfg.arena.port, mode: "live" });
     log.ok(`arena at ${c.bold(url)} — Ctrl+C to exit`);
     await waitForever();
+  });
+
+program
+  .command("demo-pack")
+  .description("Bundle finished runs into demo/ so `hydra demo` replays them with no Kane or LLM")
+  .requiredOption("--run <id...>", "run ids to bundle")
+  .option("-o, --out <dir>", "output state directory", "demo")
+  .option("--state <dir>", "state directory to read (default: .hydra)")
+  .action((o, cmd: Command) => {
+    const cfg = cfgFrom(cmd);
+    const r = packRecording(o.state ? resolve(o.state) : stateDir(cfg), resolve(o.out), o.run);
+    log.ok(`bundled ${r.runs} run(s), ${r.files} evidence file(s) → ${resolve(o.out)}`);
   });
 
 program

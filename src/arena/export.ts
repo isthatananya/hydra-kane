@@ -21,6 +21,36 @@ function referencedFiles(r: RunRecord): string[] {
   return [...files];
 }
 
+/**
+ * Bundle finished runs as a slim state dir (`<outDir>/runs/<id>/…`) that `hydra demo` and
+ * `hydra replay --state` can serve. Keeps the ledger, events and only the evidence the arena
+ * shows; drops build workspaces, snapshots and full Kane packs.
+ */
+export function packRecording(stateDir: string, outDir: string, runIds: string[]): { runs: number; files: number } {
+  const runs = listRuns(stateDir).filter((r) => runIds.includes(r.runId));
+  const missing = runIds.filter((id) => !runs.some((r) => r.runId === id));
+  if (missing.length) throw new Error(`Unknown or unfinished run(s): ${missing.join(", ")}`);
+  let fileCount = 0;
+  for (const r of runs) {
+    if (r.status === "running") throw new Error(`Run ${r.runId} is still running`);
+    const src = join(stateDir, "runs", r.runId);
+    const dest = join(outDir, "runs", r.runId);
+    removeTree(dest);
+    ensureDir(dest);
+    writeJsonAtomic(join(dest, "run.json"), r);
+    copyFileSync(join(src, "events.jsonl"), join(dest, "events.jsonl"));
+    for (const rel of referencedFiles(r)) {
+      const from = join(src, rel);
+      if (!existsSync(from)) continue;
+      const to = join(dest, rel);
+      ensureDir(dirname(to));
+      copyFileSync(from, to);
+      fileCount++;
+    }
+  }
+  return { runs: runs.length, files: fileCount };
+}
+
 export function exportArena(stateDir: string, outDir: string, opts: { runIds?: string[] } = {}): { runs: number; files: number } {
   removeTree(outDir);
   ensureDir(outDir);
