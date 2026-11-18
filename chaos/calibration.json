@@ -1,0 +1,104 @@
+{
+  "calibratedWith": "kane-cli run (fresh, headless)",
+  "rows": [
+    {
+      "bug": "wrong-total",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The checkout calculation uses the wrong shipping amount after the coupon is applied. The 10% discount is shown, but shipping remains $8.00, which makes the final charge too high.\nUpdate the checkout shipping calculation for this cart and coupon scenario, then retest that SAVE10 produces $4.00 shipping and a $58.00 total.\nevidence: objective_contradiction: the page says the coupon SAVE10 was applied, the Discount row shows \"-$6.00\", Shipping shows \"$4.00\", and the Total show",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QS18CT703QP9X5R02J7NVG/dashboard/share/US_6UK3Q3P58JPOWH5BFSQQNQBQE6F7BY45S9337ZBJLYJ9PL8ULYY4B761AOW1LC89?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T16:52:28.100Z"
+    },
+    {
+      "bug": "coupon-ignored",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The checkout recognizes the SAVE10 coupon but does not include its 10% discount when it calculates or displays the order totals.\nFix the coupon-application flow so an accepted SAVE10 coupon adds a -$6.00 discount row and recalculates the total to $58.00, then add a checkout test covering the displayed coupon state and all totals.\nevidence: objective_contradiction: SAVE10 applies but total remains $64.00 with no discount row after two attempts, so Pay $58.00 is unavailable.",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QS6AP4K7T4GFC37CFSCH1H/dashboard/share/US_2J436K4A2DYOOSW4KT1O2J1JC5MGLEQZ61LS9OVG84YETOTLZN1RB4LKQHJDFHGU?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T16:55:36.552Z"
+    },
+    {
+      "bug": "dead-pay-button",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The payment action did not complete the expected checkout result even though the required customer details, test card number, cart total, and single payment click were in place.\nInvestigate the payment button’s completion handler and make sure a successful test-card payment updates the page with “Order confirmed,” “ORD-1001,” and “Charged $58.00”.\nevidence: objective_contradiction: The valid form was paid once, but no confirmation, order number, or charge appeared.",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QSC2GZ2G6K1TWTBJPDBDBN/dashboard/share/US_D5KUF5J7JNRRT885FJEPGX6LFVTPEVY2JM2TMKANHO2WG8CJ9IM2XUBAUMJXKEK9?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T16:59:50.186Z"
+    },
+    {
+      "bug": "stale-cart",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The cart's Remove control for Field Notebook did not update the cart after a valid user action.\nInvestigate the cart removal handler for Field Notebook and add a regression test that verifies the item count, line item, and totals update immediately after Remove is selected.\nevidence: objective_contradiction: Field Notebook remains after verified button clicks, Enter, Space, and vision-targeted removal attempts.\nevidence: objective_contradiction: click: Clicking Remove for Field Notebook in your cart",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QSKV04RPY90AZ7QNCZAY6N/dashboard/share/US_KWMVIKA6SZ15RE0O1SWGRSXIG3P0TG8I1KGME817YY9CVY2H5XZKVCZQEFDRPLQR?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:02:32.554Z"
+    },
+    {
+      "bug": "validation-bypass",
+      "hypothesis": "missed",
+      "kane": "missed",
+      "exitCode": 0,
+      "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook so only Trail Mug and Canvas Tote remained.\nIncreased Trail Mug’s quantity once, resulting in 2 Trail Mugs and 1 Canvas Tote; the subtotal was $60.00.\nApplied coupon SAVE10, which deducted $6.00; shipping was $4.00 and the final total was $58.00.\nEntered the requested payment details and completed payment. The order was confirmed as ORD-1001, with $58.00 charged to the card ending in 4242.",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QSRSFYZ0ZY3JE8XN65KPWG/dashboard/share/US_95WO490SW6XZ6Y0M60YOY7XFVNDSE0NH3CD2NGE9OK5H0X1RMOUIBI0NYNYHQ9DX?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:05:36.839Z"
+    },
+    {
+      "bug": "double-submit",
+      "hypothesis": "missed",
+      "kane": "missed",
+      "exitCode": 0,
+      "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook.\nIncreased the Trail Mug quantity to 2 while keeping Canvas Tote at 1; the subtotal was $60.00.\nApplied coupon SAVE10, which discounted $6.00; shipping was $4.00 and the final total was $58.00.\nEntered the requested payment details and completed payment.\nThe order was confirmed as ORD-1001, with $58.00 charged.",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QSYCSYYNS71M7RVK3AZZ91/dashboard/share/US_A48G4BPWBA06UN91TAZLQ0KT4R6FJGDSHSCVXRTZNFM3G1AAV3MVDKYIRST0YJCS?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:08:50.298Z"
+    },
+    {
+      "bug": "pay-500",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "After the correct cart, coupon, total, and payment details were entered, the store's payment service returned an internal server error instead of confirming the order.\nInvestigate the payment handler for the $58.00 checkout scenario and restore a successful order response for the provided test card.\nevidence: network_failure: POST http://localhost:3100/api/pay -> 500\nevidence: console_error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QT4AN2ZDBRNNXG4HQWXMWJ/dashboard/share/US_63BBFEKR334JGTKEC01QNSQJRNU4Q5MA7K5INFT1TBBDYM5AFQ6H06XCPQEKFGRE?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:13:01.961Z"
+    },
+    {
+      "bug": "off-by-one-qty",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The cart's quantity buttons are connected to the wrong product. Using the control labeled for Trail Mug changed Canvas Tote instead, while Canvas Tote's own increase control did nothing.\nFix the cart quantity controls so each + button changes only the product shown on its own row, then add a check that both Trail Mug and Canvas Tote controls work independently.\nevidence: objective_contradiction: Trail Mug stayed at one; its labeled plus increased Canvas twice, while Canvas plus had no effect.",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QTBZPXMNHJ6NQ61CXY32KF/dashboard/share/US_OVASNF18LQPZ35RE9AT69URQWQ0WB7IC0CQFR7WEAHYPSKSJN1QPXXYPMO7Y8XTI?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:16:15.386Z"
+    },
+    {
+      "bug": "currency-format",
+      "hypothesis": "unknown",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The checkout page formats this whole-dollar subtotal with one decimal place rather than two, unlike the required currency format.\nFormat all checkout currency values consistently with two digits after the decimal point, including whole-dollar subtotals.\nevidence: objective_contradiction: Checkpoint assertion failed: \"the Subtotal shows exactly \"$60.00\"\"",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QTHXS26HR5ACPRCKQTTB8B/dashboard/share/US_7F7CBD1H1F4BZC91R23WILJRI7QACK6ZOVFX7Q9ZIF219NWP8MAD0UT1STH9L3JS?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:18:45.415Z"
+    },
+    {
+      "bug": "confirmation-amount",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The checkout applied the coupon in the displayed total but did not apply that discounted total when creating the final charge.\nFix checkout so the amount charged always matches the final displayed total after discounts and shipping, and add a test that compares the confirmation charge with the payment-button total.\nevidence: objective_contradiction: Charged $60.00",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QTPF145HMHAKZG4EH51PCZ/dashboard/share/US_6QK9SEPTM2H9KZ2AAL43L35T2E8KL6X7NHXKFHMBNO8ZPAUOJR6LFZRMEV3LUEFZ?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:22:08.499Z"
+    },
+    {
+      "bug": "fixed-coupon-ignored",
+      "hypothesis": "missed",
+      "kane": "missed",
+      "exitCode": 0,
+      "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook.\nIncreased the Trail Mug quantity once, leaving 2 Trail Mugs and 1 Canvas Tote; the subtotal was $60.00.\nApplied coupon SAVE10, which gave a -$6.00 discount; shipping was $4.00 and the final total was $58.00.\nEntered the provided payment details and completed payment for $58.00.\nThe order was confirmed as ORD-1001, with $58.00 charged.",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QTWJAQ3AJWR58EVY7X25Y8/dashboard/share/US_8294JOE1A515LW825PYM4PUQQ8SACGD28SHNXMAL6UKYFN45SWCS9PZUUUJBUG9M?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-18T17:25:37.717Z"
+    }
+  ]
+}
