@@ -1,0 +1,9 @@
+node_modules/
+.hydra/
+dist/
+.next/
+target-app/.next/
+*.log
+.env
+.env.*
+.testmuai/

@@ -1,0 +1,51 @@
+{
+  "name": "hydra-kane",
+  "version": "0.1.0",
+  "description": "A verification loop for AI coding agents: a builder ships, a chaos agent breaks, Kane CLI referees in a real browser.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "hydra": "bin/hydra.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "arena/",
+    "demo/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.11"
+  },
+  "workspaces": [
+    "target-app"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test \"test/**/*.test.mjs\"",
+    "app:build": "npm run build --workspace target-app",
+    "app:start": "npm run start --workspace target-app"
+  },
+  "keywords": [
+    "kane-cli",
+    "ai-agents",
+    "verification",
+    "chaos-engineering",
+    "browser-testing"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "commander": "15.1.0",
+    "diff": "9.0.0",
+    "picomatch": "4.0.7",
+    "playwright-core": "1.65.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/picomatch": "4.0.3",
+    "typescript": "5.9.3"
+  }
+}
