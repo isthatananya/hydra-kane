@@ -5,6 +5,7 @@ import type { HydraConfig } from "../config.js";
 import type { Spec } from "../spec.js";
 import { copyTree, ensureDir, relPosix, walkFiles, writeJsonAtomic } from "../util/fs.js";
 import { exec, isWindows, which } from "../util/proc.js";
+import { extractZip } from "../util/zip.js";
 import { extractEvidence, type KaneEvent } from "./events.js";
 
 /** Kane's documented exit codes, plus 3 (cancel/timeout) which kane-cli 0.10 emits. */
@@ -232,13 +233,33 @@ function archiveEvidence(
     }
   }
 
+  // Kane packs screenshots, HAR, console/action logs and step JSON into `.evidence` zips.
+  // Unpack each next to itself (`<name>.evidence` -> `<name>/`) so replay can serve them.
+  if (existsSync(packDest)) {
+    for (const f of walkFiles(packDest)) {
+      if (!f.endsWith(".evidence")) continue;
+      try {
+        extractZip(join(packDest, f), join(packDest, f.slice(0, -".evidence".length)));
+      } catch {
+        /* a corrupt pack still leaves the zip itself and the ShareLink */
+      }
+    }
+  }
+
   const files = existsSync(packDest) ? walkFiles(packDest) : [];
   const rel = (f: string) => relPosix(outDir, join(packDest, f));
   const largest = (list: string[]) =>
     list.sort((a, b) => statSync(join(packDest, b)).size - statSync(join(packDest, a)).size)[0] ?? null;
 
   const videos = files.filter((f) => VIDEO_EXT.has(extname(f).toLowerCase()));
-  const shots = files.filter((f) => IMAGE_EXT.has(extname(f).toLowerCase()));
+  // One image per step folder, preferring Kane's annotated frame (it marks the element acted on).
+  const byDir = new Map<string, string>();
+  for (const f of files.filter((x) => IMAGE_EXT.has(extname(x).toLowerCase()))) {
+    const d = dirname(f);
+    const prev = byDir.get(d);
+    if (!prev || (/annotated/i.test(f) && !/annotated/i.test(prev))) byDir.set(d, f);
+  }
+  const shots = [...byDir.values()];
   const textLogs = files.filter((f) => /\.(log|ndjson|jsonl|json|txt|har)$/i.test(f));
   const logs: KaneResult["logs"] = { console: [], network: [], commands: [], other: [] };
   for (const f of textLogs) {
