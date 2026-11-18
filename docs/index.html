@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hydra Arena</title>
+  <meta name="description" content="Live and replay spectator view of Hydra's build → chaos → Kane → heal loop." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2310b981'/%3E%3Cpath d='M9 8v16M23 8v16M9 16h14' stroke='%23062018' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">H</span>
+      <div>
+        <h1>Hydra Arena</h1>
+        <p class="sub">builder ships · chaos breaks · <strong>Kane referees</strong></p>
+      </div>
+    </div>
+    <div class="controls">
+      <label class="sr" for="run-select">Run</label>
+      <select id="run-select" aria-label="Select a run"></select>
+      <span id="mode-badge" class="badge">—</span>
+      <div class="replay" id="replay-controls" hidden>
+        <button id="btn-play" type="button" aria-label="Pause replay">❚❚</button>
+        <button id="btn-restart" type="button" aria-label="Restart replay">↺</button>
+        <label class="sr" for="speed">Replay speed</label>
+        <select id="speed" aria-label="Replay speed">
+          <option value="1">1×</option>
+          <option value="4" selected>4×</option>
+          <option value="16">16×</option>
+          <option value="0">instant</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="pipeline" aria-label="Loop phases">
+      <ol id="phases"></ol>
+      <div class="status-line"><span id="status-text">Waiting for a run…</span></div>
+    </section>
+
+    <section class="scoreboard" aria-labelledby="sb-h">
+      <h2 id="sb-h">Scoreboard <span class="muted">FAIL → patch → PASS</span></h2>
+      <div id="tiles" class="tiles" role="list"></div>
+    </section>
+
+    <div class="grid">
+      <section class="card kane" aria-labelledby="kane-h">
+        <header class="card-h">
+          <h2 id="kane-h">Kane verdict</h2>
+          <span id="kane-verdict" class="pill">—</span>
+        </header>
+        <div class="video-wrap">
+          <video id="kane-video" controls muted playsinline preload="metadata"></video>
+          <div id="video-empty" class="video-empty">No video yet</div>
+        </div>
+        <dl class="kv" id="kane-details"></dl>
+        <div id="shots" class="shots"></div>
+      </section>
+
+      <section class="card" aria-labelledby="diff-h">
+        <header class="card-h">
+          <h2 id="diff-h">Builder patch</h2>
+          <span id="diff-meta" class="muted small"></span>
+        </header>
+        <pre id="diff" class="diff" tabindex="0"><span class="muted">No patch yet.</span></pre>
+      </section>
+
+      <section class="card" aria-labelledby="chaos-h">
+        <header class="card-h">
+          <h2 id="chaos-h">Chaos <span class="muted small">(hidden from the builder)</span></h2>
+          <span id="chaos-class" class="pill">—</span>
+        </header>
+        <p id="chaos-desc" class="muted">No bug injected yet.</p>
+        <details>
+          <summary>Injected diff</summary>
+          <pre id="chaos-diff" class="diff small-diff"></pre>
+        </details>
+        <h3>Ground truth</h3>
+        <p class="muted small">Scripted oracle checks. They label Kane's verdicts; they never gate a deploy.</p>
+        <div id="gt" class="gt"></div>
+      </section>
+
+      <section class="card" aria-labelledby="stats-h">
+        <header class="card-h">
+          <h2 id="stats-h">Detection quality</h2>
+          <span class="muted small">all recorded runs</span>
+        </header>
+        <div id="stats" class="stats"></div>
+        <h3>Bug-class heatmap</h3>
+        <div id="heatmap" class="heatmap"></div>
+      </section>
+    </div>
+
+    <section class="card log" aria-labelledby="log-h">
+      <header class="card-h"><h2 id="log-h">Timeline</h2><span id="clock" class="muted small"></span></header>
+      <ol id="timeline" class="timeline"></ol>
+    </section>
+  </main>
+
+  <footer class="foot muted small">
+    Hydra · Kane CLI is the only verifier · evidence is archived locally because ShareLinks expire
+  </footer>
+  <script>window.HYDRA_STATIC = true;</script>
+  <script src="app.js"></script>
+</body>
+</html>
