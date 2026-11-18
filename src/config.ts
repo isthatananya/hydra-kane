@@ -91,7 +91,8 @@ export const DEFAULTS: Omit<HydraConfig, "root"> = {
     },
     opencode: {
       command:
-        'opencode run --auto --format json -f "{prompt_file}" "Follow the instructions in the attached file exactly. Work in the current directory."',
+        // The message must come before -f: -f takes a list of files and would swallow it.
+        'opencode run --auto --format json "Follow the instructions in the attached file exactly. Work in the current directory." -f "{prompt_file}"',
       tokens: "opencode-json",
       timeoutSec: 900,
       description: "opencode, headless (run --auto)",
