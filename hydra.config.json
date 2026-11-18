@@ -1,0 +1,10 @@
+{
+  "app": { "dir": "target-app", "port": 3100 },
+  "specs": { "main": "specs/checkout.flow.md", "holdout": "specs/holdout.flow.md" },
+  "verify": { "specs": ["specs/checkout.flow.md"], "resetPath": "/api/reset" },
+  "kane": { "timeoutSec": 420, "maxSteps": 60, "retries": 2, "maxRunsPerLoop": 30 },
+  "heal": { "maxRounds": 5 },
+  "defaultBuilder": "claude",
+  "allowlist": ["app/**", "components/**", "lib/**"],
+  "arena": { "port": 4400 }
+}
