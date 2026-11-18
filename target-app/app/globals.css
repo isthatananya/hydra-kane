@@ -1,0 +1,72 @@
+:root {
+  --bg: #f6f5f2;
+  --panel: #ffffff;
+  --ink: #1c1c1a;
+  --muted: #6b6a65;
+  --line: #e3e1db;
+  --accent: #1f5f4a;
+  --accent-ink: #ffffff;
+  --danger: #b42318;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+main { max-width: 1200px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 1.6rem; margin: 8px 0 16px; }
+h2 { font-size: 1.1rem; margin: 0 0 12px; }
+h3 { font-size: 1rem; margin: 0 0 4px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+
+.site-header {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; color: var(--ink); text-decoration: none; }
+
+.layout { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+
+ul { list-style: none; padding: 0; margin: 0; }
+.product { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.product:last-child { border-bottom: 0; }
+.product p { margin: 0; font-size: 0.9rem; }
+.product-buy { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.price { font-weight: 600; }
+
+button {
+  font: inherit; cursor: pointer; border-radius: 6px; border: 1px solid var(--line);
+  background: #fff; color: var(--ink); padding: 6px 12px;
+}
+button:disabled { cursor: not-allowed; opacity: 0.55; }
+button.primary { width: 100%; padding: 12px; background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+button.link { border: 0; background: none; color: var(--accent); padding: 0; text-decoration: underline; }
+
+.cart-line { display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.cart-line-name { display: flex; flex-direction: column; font-size: 0.95rem; }
+.qty { display: flex; align-items: center; gap: 6px; }
+.qty button { width: 30px; padding: 4px 0; }
+.qty-value { min-width: 1.5em; text-align: center; }
+.line-total { font-variant-numeric: tabular-nums; }
+
+.coupon, .coupon-applied { margin: 14px 0; }
+.coupon label, .field label { display: block; font-size: 0.85rem; margin-bottom: 4px; }
+.row { display: flex; gap: 8px; }
+input { font: inherit; width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; }
+input[aria-invalid="true"] { border-color: var(--danger); }
+.coupon-applied { display: flex; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 6px; background: #eef6f2; }
+
+.summary { margin: 0; }
+.summary div { display: flex; justify-content: space-between; padding: 4px 0; font-variant-numeric: tabular-nums; }
+.summary dt, .summary dd { margin: 0; }
+.summary-total { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 8px !important; font-weight: 700; font-size: 1.1rem; }
+
+.field { margin-bottom: 12px; }
+.error { color: var(--danger); font-size: 0.85rem; margin: 4px 0 0; }
+
+.confirmation { max-width: 560px; }
+.receipt li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.receipt { margin: 12px 0 16px; }
