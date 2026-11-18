@@ -39,7 +39,7 @@
     return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
   };
   const fmtPct = (x) => (x === null || x === undefined ? "—" : `${Math.round(x * 100)}%`);
-  const fmtNum = (x) => (x === null || x === undefined ? "—" : Math.round(x).toLocaleString());
+  const fmtNum = (x) => (x === null || x === undefined ? "—" : Math.round(x).toLocaleString("en-US"));
 
   // ── State ────────────────────────────────────────────────────────────────
   let state = fresh();

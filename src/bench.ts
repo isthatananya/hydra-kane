@@ -21,7 +21,7 @@ export function benchTable(runs: RunRecord[]): string {
       r.status,
       r.metrics.roundsToGreen ?? "—",
       secs(r.metrics.timeToHealMs),
-      r.metrics.tokensTotal?.toLocaleString() ?? "—",
+      r.metrics.tokensTotal?.toLocaleString("en-US") ?? "—",
       r.metrics.kaneRuns,
       r.metrics.holdoutFailures,
     ].join(" | "),
