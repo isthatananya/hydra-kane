@@ -1,0 +1,12 @@
+===================================================================
+--- a/lib/pricing.ts
++++ b/lib/pricing.ts
+@@ -52,7 +52,7 @@
+   const coupon = lookupCoupon(wanted);
+   const couponError = wanted && !coupon ? `Coupon ${wanted} is not valid` : null;
+   const discountCents = discountFor(coupon, subtotalCents);
+-  const shippingCents = lines.length * SHIPPING_CENTS;
++  const shippingCents = lines.length > 0 ? SHIPPING_CENTS : 0;
+   const totalCents = subtotalCents - discountCents + shippingCents;
+ 
+   return {
