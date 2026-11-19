@@ -19,7 +19,8 @@
     "breaks": [
       "main",
       "holdout"
-    ]
+    ],
+    "surface": "math"
   },
   "chaosDiff": "chaos.patch",
   "specs": [
