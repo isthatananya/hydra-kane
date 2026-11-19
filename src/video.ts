@@ -13,7 +13,7 @@ import { ensureDir, relPosix, removeTree, walkFiles, writeJsonAtomic } from "./u
 import { log } from "./util/log.js";
 
 type Frame =
-  | { kind: "card"; title: string; subtitle: string; tone: "info" | "pass" | "fail"; ms: number }
+  | { kind: "card"; title: string; subtitle: string; detail?: string; tone: "info" | "pass" | "fail"; ms: number }
   | { kind: "step"; image: string; caption: string; status: string; index: number; total: number; ms: number };
 
 const STEP_MS = 1100;
@@ -55,8 +55,22 @@ function framesFor(run: RunRecord, runDir: string, k: KaneRef): Frame[] {
   return [
     { kind: "card", title: `Kane · ${k.label}`, subtitle: `seed ${run.seed} · builder ${run.builder} · ${bug}`, tone: "info", ms: CARD_MS },
     ...steps.map((s, i): Frame => ({ kind: "step", image: s.image, caption: s.summary, status: s.status, index: i + 1, total: steps.length, ms: STEP_MS })),
-    { kind: "card", title: verdict, subtitle: (k.summary ?? "").split("\n")[0]!.slice(0, 220), tone, ms: CARD_MS + 800 },
+    { kind: "card", title: verdict, subtitle: clip((k.summary ?? "").split("\n")[0]!, 200), detail: evidenceLine(k.summary), tone, ms: CARD_MS + 1800 },
   ];
+}
+
+/** Shorten at a word boundary. */
+function clip(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max / 2)).replace(/[\s,;:]+$/, "")}…`;
+}
+
+/** Kane's first `evidence:` line: what it actually observed, which its prose summary can misattribute. */
+function evidenceLine(summary: string | null): string | undefined {
+  const line = (summary ?? "").split("\n").find((l) => /^\s*evidence:/i.test(l));
+  if (!line) return undefined;
+  return clip(line.replace(/^\s*evidence:\s*/i, "").replace(/^[a-z_]+:\s*/i, ""), 160);
 }
 
 const MIME: Record<string, string> = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" };
@@ -113,6 +127,11 @@ async function renderWebm(frames: Frame[], outFile: string, browser: import("pla
           ctx.fillStyle = "#c9d1d9";
           ctx.font = "28px system-ui, sans-serif";
           wrap(f.subtitle, W - 200, W / 2, H / 2 + 40, 38, 4);
+          if (f.detail) {
+            ctx.fillStyle = "#e3b341";
+            ctx.font = "italic 24px system-ui, sans-serif";
+            wrap(`Kane saw: ${f.detail}`, W - 240, W / 2, H / 2 + 220, 32, 2);
+          }
           ctx.textAlign = "left";
           return;
         }
