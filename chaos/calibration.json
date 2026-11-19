@@ -99,6 +99,15 @@
       "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook.\nIncreased the Trail Mug quantity once, leaving 2 Trail Mugs and 1 Canvas Tote; the subtotal was $60.00.\nApplied coupon SAVE10, which gave a -$6.00 discount; shipping was $4.00 and the final total was $58.00.\nEntered the provided payment details and completed payment for $58.00.\nThe order was confirmed as ORD-1001, with $58.00 charged.",
       "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7QTWJAQ3AJWR58EVY7X25Y8/dashboard/share/US_8294JOE1A515LW825PYM4PUQQ8SACGD28SHNXMAL6UKYFN45SWCS9PZUUUJBUG9M?type=summary&agentView=true&fqdn=summary-page",
       "measuredAt": "2026-11-18T17:25:37.717Z"
+    },
+    {
+      "bug": "stale-quote-on-qty",
+      "hypothesis": "caught",
+      "kane": "caught",
+      "exitCode": 1,
+      "summary": "The cart did not apply the requested quantity increase for Trail Mug. The follow-up cart view still shows quantity 1 and a $42.00 subtotal, even though the increase control was clicked.\nFix the Trail Mug increase control so one click raises its quantity to 2 and immediately recalculates the subtotal.\nevidence: objective_contradiction: click: Clicking the plus button to increase Trail Mug quantity",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SFYWEWEDG77H6REW787TJQ/dashboard/share/US_SWTZN5VN3UW4XJWSCTLPFHRJMP23B2NN6S6OVG6CP3J33DVKDKCG53YER7CISWV2?type=summary&agentView=true&fqdn=summary-page",
+      "measuredAt": "2026-11-19T08:51:34.398Z"
     }
   ]
 }

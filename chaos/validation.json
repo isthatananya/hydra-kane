@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-11-18T15:15:17.366Z",
+  "validatedAt": "2026-11-19T08:49:30.779Z",
   "baselineOk": true,
   "rows": [
     {
@@ -156,6 +156,21 @@
         "holdout"
       ],
       "declared": [
+        "holdout"
+      ],
+      "confirmed": true,
+      "note": null
+    },
+    {
+      "bug": "stale-quote-on-qty",
+      "applies": true,
+      "builds": true,
+      "failing": [
+        "main",
+        "holdout"
+      ],
+      "declared": [
+        "main",
         "holdout"
       ],
       "confirmed": true,
