@@ -3,6 +3,7 @@ import { join } from "node:path";
 import type { KaneResult } from "./kane/wrapper.js";
 import type { Tokens } from "./builder/adapter.js";
 import type { GroundTruthReport } from "./chaos/groundtruth.js";
+import { findBug } from "./chaos/taxonomy.js";
 import { ensureDir, readJsonOr, relPosix, writeJsonAtomic } from "./util/fs.js";
 
 export type RunStatus =
@@ -55,6 +56,8 @@ export type BugInfo = {
   id: string;
   title: string;
   bugClass: string;
+  /** math | state | flow. Optional: runs recorded before it existed are looked up by bug id. */
+  surface?: string;
   description: string;
   source: "library" | "mutator";
   kaneHypothesis: string;
@@ -290,6 +293,7 @@ export function aggregate(runs: RunRecord[]) {
   const holdoutRuns = runs.reduce((n, r) => n + r.rounds.filter((h) => h.verify.some((v) => v.spec === "holdout")).length, 0);
   const holdoutFails = runs.reduce((n, r) => n + r.metrics.holdoutFailures, 0);
   const byClass: Record<string, { injected: number; caught: number; missed: number; healed: number }> = {};
+  const bySurface: Record<string, { injected: number; caught: number; missed: number; healed: number }> = {};
   for (const r of injected) {
     const k = r.bug?.bugClass ?? "unknown";
     byClass[k] ??= { injected: 0, caught: 0, missed: 0, healed: 0 };
@@ -297,6 +301,12 @@ export function aggregate(runs: RunRecord[]) {
     if (r.referee?.verdict === "CATCH") byClass[k].caught++;
     else byClass[k].missed++;
     if (r.status === "healed") byClass[k].healed++;
+    const sk = bugSurface(r.bug);
+    bySurface[sk] ??= { injected: 0, caught: 0, missed: 0, healed: 0 };
+    bySurface[sk].injected++;
+    if (r.referee?.verdict === "CATCH") bySurface[sk].caught++;
+    else bySurface[sk].missed++;
+    if (r.status === "healed") bySurface[sk].healed++;
   }
   return {
     runs: runs.length,
@@ -311,5 +321,12 @@ export function aggregate(runs: RunRecord[]) {
     holdoutFailRate: holdoutRuns ? holdoutFails / holdoutRuns : null,
     falseGreens: runs.filter((r) => r.metrics.falseGreen === true).length,
     byClass,
+    bySurface,
   };
+}
+
+/** The bug's surface, falling back to the taxonomy for runs recorded before the field existed. */
+export function bugSurface(bug: BugInfo | null | undefined): string {
+  if (!bug) return "unknown";
+  return bug.surface ?? bug.id.split("+").map((id) => findBug(id)?.surface ?? "unknown").reduce((a, b) => (a === b ? a : "mixed"));
 }

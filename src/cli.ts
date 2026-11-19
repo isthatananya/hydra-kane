@@ -234,7 +234,7 @@ chaos
     for (const b of BUGS) {
       const measured = calMap.get(b.id);
       process.stdout.write(
-        `${b.id.padEnd(22)} ${b.bugClass.padEnd(12)} seed ${String(seeds.get(b.id) ?? "-").padEnd(4)} breaks ${b.breaks.join(",").padEnd(22)} Kane: ${measured ? `${measured} (measured)` : `${b.kaneHypothesis} (hypothesis)`}\n`,
+        `${b.id.padEnd(22)} ${b.bugClass.padEnd(12)} ${b.surface.padEnd(6)} ${seeds.has(b.id) ? `seed ${String(seeds.get(b.id)).padEnd(4)}` : "--bug    "} breaks ${b.breaks.join(",").padEnd(22)} Kane: ${measured ? `${measured} (measured)` : `${b.kaneHypothesis} (hypothesis)`}\n`,
       );
     }
   });
@@ -334,6 +334,7 @@ program
         `detection rate ${pct(s.detectionRate)} · healed ${s.healed} · avg rounds to green ${s.avgRoundsToGreen?.toFixed(1) ?? "—"}`,
         `avg time to heal ${s.avgTimeToHealMs === null ? "—" : `${Math.round(s.avgTimeToHealMs / 1000)}s`} · tokens/heal ${s.avgTokensPerHeal === null ? "—" : Math.round(s.avgTokensPerHeal)}`,
         `holdout fail rate ${pct(s.holdoutFailRate)} · false greens ${s.falseGreens}`,
+        `by surface: ${Object.entries(s.bySurface).map(([k, v]) => `${k} ${v.caught}/${v.injected} caught`).join(" · ") || "—"}`,
         "",
         benchTable(runs.slice().reverse()),
         "",

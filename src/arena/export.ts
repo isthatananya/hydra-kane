@@ -1,9 +1,14 @@
 /** Export recorded runs as a static site (GitHub Pages etc.) — the public, no-backend arena. */
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { aggregate, listRuns, readEvents, type RunRecord } from "../ledger.js";
+import { aggregate, bugSurface, listRuns, readEvents, type RunRecord } from "../ledger.js";
 import { copyTree, ensureDir, removeTree, writeJsonAtomic } from "../util/fs.js";
 import { ARENA_UI_DIR } from "./server.js";
+
+/** Fill in fields older recordings lack, so the published arena shows them. */
+function withSurface(r: RunRecord): RunRecord {
+  return r.bug ? { ...r, bug: { ...r.bug, surface: bugSurface(r.bug) } } : r;
+}
 
 function referencedFiles(r: RunRecord): string[] {
   const files = new Set<string>();
@@ -37,7 +42,7 @@ export function packRecording(stateDir: string, outDir: string, runIds: string[]
     const dest = join(outDir, "runs", r.runId);
     removeTree(dest);
     ensureDir(dest);
-    writeJsonAtomic(join(dest, "run.json"), r);
+    writeJsonAtomic(join(dest, "run.json"), withSurface(r));
     copyFileSync(join(src, "events.jsonl"), join(dest, "events.jsonl"));
     for (const rel of referencedFiles(r)) {
       const from = join(src, rel);
@@ -67,7 +72,7 @@ export function exportArena(stateDir: string, outDir: string, opts: { runIds?: s
   for (const r of runs) {
     const src = join(stateDir, "runs", r.runId);
     const dest = ensureDir(join(outDir, "data", "runs", r.runId));
-    writeJsonAtomic(join(dest, "run.json"), r);
+    writeJsonAtomic(join(dest, "run.json"), withSurface(r));
     writeJsonAtomic(join(dest, "events.json"), readEvents(src));
     for (const rel of referencedFiles(r)) {
       const from = join(src, rel);
@@ -85,7 +90,7 @@ export function exportArena(stateDir: string, outDir: string, opts: { runIds?: s
       seed: r.seed,
       builder: r.builder,
       status: r.status,
-      bug: r.bug ? { id: r.bug.id, bugClass: r.bug.bugClass } : null,
+      bug: r.bug ? { id: r.bug.id, bugClass: r.bug.bugClass, surface: bugSurface(r.bug) } : null,
       verdict: r.referee?.verdict ?? null,
       startedAt: r.startedAt,
       durationMs: r.durationMs,

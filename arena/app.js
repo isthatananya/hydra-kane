@@ -289,7 +289,7 @@
 
   function renderChaos() {
     const b = state.bug;
-    $("chaos-class").textContent = b ? b.bugClass : "—";
+    $("chaos-class").textContent = b ? (b.surface ? `${b.bugClass} · ${b.surface}` : b.bugClass) : "—";
     $("chaos-class").className = `pill${b ? " warn" : ""}`;
     $("chaos-desc").textContent = b ? `${b.title}: ${b.description} (source: ${b.source}; Kane hypothesis: ${b.kaneHypothesis})` : "No bug injected yet.";
     renderPatch($("chaos-diff"), state.chaosDiff);
