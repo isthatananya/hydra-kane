@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { BUGS, bugForSeed, seedTable, findBug } from "../dist/chaos/taxonomy.js";
+import { BUGS, SEED_POOL, bugForSeed, seedTable, findBug } from "../dist/chaos/taxonomy.js";
 import { applyEdits, checkEdits, PatchError } from "../dist/chaos/engine.js";
 import { takeSnapshot, diffAgainstSnapshot, revertChanges } from "../dist/anticheat.js";
 import { parseSpec, lockSpec, checkSpec, restoreSpec, unlockSpec } from "../dist/spec.js";
@@ -37,11 +37,22 @@ test("taxonomy has at least the 8 PRD bug classes, with unique ids", () => {
   }
 });
 
-test("seed -> bug is deterministic and covers every bug", () => {
+test("seed -> bug is deterministic and covers the whole seed pool", () => {
   for (let s = 0; s < 200; s++) assert.equal(bugForSeed(s).id, bugForSeed(s).id);
-  assert.equal(seedTable().size, BUGS.length, "some bug is unreachable from small seeds");
+  assert.equal(seedTable().size, SEED_POOL.length, "some pooled bug is unreachable from small seeds");
   assert.throws(() => bugForSeed(-1));
   assert.throws(() => bugForSeed(1.5));
+});
+
+test("recorded seeds keep mapping to the same bugs (demo/ and README depend on it)", () => {
+  const recorded = { 0: "dead-pay-button", 3: "off-by-one-qty", 7: "wrong-total", 12: "stale-cart", 14: "validation-bypass" };
+  for (const [seed, id] of Object.entries(recorded)) assert.equal(bugForSeed(Number(seed)).id, id, `seed ${seed}`);
+});
+
+test("every bug declares how it surfaces, and the state class is covered", () => {
+  for (const b of BUGS) assert.ok(["math", "state", "flow"].includes(b.surface), `${b.id} has surface ${b.surface}`);
+  const surfaces = new Set(BUGS.map((b) => b.surface));
+  for (const s of ["math", "state", "flow"]) assert.ok(surfaces.has(s), `no ${s} bug`);
 });
 
 test("every library bug applies exactly once against the shipped target app", () => {
