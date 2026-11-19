@@ -138,7 +138,7 @@
       "failingStep": null,
       "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7R3073G6H6CWCB39QR1BJS6/dashboard/share/US_TPIIZO66YU9SF9BSSTS3Z8HL3V7Q2KDBI53ADXJ4CEXJM8UAZHU20AO4AB1WFVDA?type=summary&agentView=true&fqdn=summary-page",
       "evidenceDir": "kane/03-referee",
-      "video": null,
+      "video": "videos/referee.webm",
       "screenshots": [
         "kane/03-referee/pack/run-0/evidence/39835938-b70a-49b4-8b15-a7ce8960c9ea/tests/you-are-testing-the-hydra-supply-co-chec-45ddc5a2/steps/1-0-1/screenshot.jpg",
         "kane/03-referee/pack/run-0/evidence/39835938-b70a-49b4-8b15-a7ce8960c9ea/tests/you-are-testing-the-hydra-supply-co-chec-45ddc5a2/steps/2-0-2/annotated.png",
