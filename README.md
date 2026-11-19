@@ -36,6 +36,7 @@ Recorded with kane-cli 0.10.4 on the bundled checkout app. Every run below is in
 | 7 | wrong-total | hardcoder (hardcodes SAVE10 totals) | CATCH | **Never deployed**: passed the visible spec twice, then failed the hidden holdout |
 | 14 | validation-bypass | claude | **MISS** | Logged honestly: the main flow never submits a bad email |
 | 7 | wrong-total | opencode | CATCH | **Healed in 1 round**: the same one-line fix as Claude → deployed |
+| 12 | stale-cart (state) | claude | CATCH | **Healed in 1 round**: put back the immutable `filter` in place of the in-place `splice` → deployed |
 
 Same seed, two builders (`hydra stats`):
 
@@ -48,6 +49,26 @@ A heal costs about 6 Kane runs (≈280 credits, no infra retries) and about 10 m
 
 **Browse the runs:** [isthatananya.github.io/hydra-kane](https://isthatananya.github.io/hydra-kane/) is a static arena exported to
 `docs/` with `hydra export-arena`, so it needs no backend and no Kane.
+
+### Math bugs vs state bugs
+
+A wrong number for given inputs and a number that goes wrong only after an input changes fail differently,
+so every chaos bug is tagged with how it surfaces (`hydra chaos list`, `hydra stats` reports detection per surface):
+
+| Surface | What breaks | Bugs | What a verifier must do |
+|---|---|---|---|
+| **math** | wrong value for the given inputs | wrong-total, coupon-ignored, fixed-coupon-ignored, currency-format, confirmation-amount | reach the inputs, then read the value |
+| **state** | right until an input changes (qty, remove, coupon), then stale or wrong | stale-cart, off-by-one-qty, stale-quote-on-qty | click through the change, then check again |
+| **flow** | an action or request path breaks | dead-pay-button, validation-bypass, double-submit, pay-500 | submit, and watch what the server does |
+
+The checkout cart starts empty, so there is no "initial price" to check: even the math bug `wrong-total`
+(shipping charged per cart line) only appears once two items are in the cart. Kane's main flow adds three items,
+removes one, bumps a quantity and applies a coupon *before* it asserts the totals, which is why it sees all three
+kinds. `stale-quote-on-qty` is the sharpest state case: the quote is memoised on the number of cart lines, so it is
+correct after every add, remove and coupon, and wrong only right after a `+` click.
+Measured: Kane caught all three state bugs. On `stale-quote-on-qty` it reported "the follow-up cart view still shows
+quantity 1 and a $42.00 subtotal, even though the increase control was clicked", which names the input change, not
+just a wrong number. Claude healed `stale-cart` in one round (8.4 min, 123,438 tokens).
 
 One finding from the hardcoder run: Kane's *verdict and evidence* were right ("shipping is $8.00 and total $49.50"),
 but its prose explanation blamed a missed click that its own step log shows succeeded. Hydra therefore feeds the
@@ -71,27 +92,28 @@ builder Kane's raw evidence lines, not just the summary.
 
 ## Chaos library
 
-Eleven pre-validated bugs. `hydra chaos validate` applies each one, builds and boots the app, and confirms with a scripted
+Twelve pre-validated bugs. `hydra chaos validate` applies each one, builds and boots the app, and confirms with a scripted
 ground-truth oracle that it breaks exactly the checks it declares. `hydra chaos calibrate` then runs Kane's main flow
 against each bug (results in `chaos/calibration.json`). MISSes are logged, not hidden.
 
-**Measured with kane-cli 0.10.4: Kane caught 8 of 11 (73%).** All three misses are bugs outside the main flow's path
+**Measured with kane-cli 0.10.4: Kane caught 9 of 12 (75%)**, including all three state bugs. All three misses are bugs outside the main flow's path
 (a bad email, a double click, a fixed-amount coupon), which is what the holdout flow and the spec agent are for.
 On the unmodified app, a 10-run soak passed 10/10 (≈48 credits and ≈220 s per run).
 
-| Bug | Class | Seed | Breaks | Kane (measured) |
-|---|---|---|---|---|
-| dead-pay-button | interaction | 0 | main, holdout | caught |
-| pay-500 | server | 1 | main, holdout | caught |
-| currency-format | display | 2 | main, holdout | caught |
-| off-by-one-qty | state | 3 | main, holdout | caught |
-| fixed-coupon-ignored | coupon | 4 | holdout | **missed** |
-| double-submit | concurrency | 6 | double-click | **missed** |
-| wrong-total | pricing | 7 | main, holdout | caught |
-| coupon-ignored | coupon | 8 | main, holdout | caught |
-| stale-cart | state | 12 | main | caught |
-| validation-bypass | validation | 14 | invalid-email | **missed** |
-| confirmation-amount | display | 30 | main, holdout | caught |
+| Bug | Class | Surface | Seed | Breaks | Kane (measured) |
+|---|---|---|---|---|---|
+| dead-pay-button | interaction | flow | 0 | main, holdout | caught |
+| pay-500 | server | flow | 1 | main, holdout | caught |
+| currency-format | display | math | 2 | main, holdout | caught |
+| off-by-one-qty | state | state | 3 | main, holdout | caught |
+| fixed-coupon-ignored | coupon | math | 4 | holdout | **missed** |
+| double-submit | concurrency | flow | 6 | double-click | **missed** |
+| wrong-total | pricing | math | 7 | main, holdout | caught |
+| coupon-ignored | coupon | math | 8 | main, holdout | caught |
+| stale-cart | state | state | 12 | main | caught |
+| validation-bypass | validation | flow | 14 | invalid-email | **missed** |
+| confirmation-amount | display | math | 30 | main, holdout | caught |
+| stale-quote-on-qty | state | state | `--bug` | main, holdout | caught |
 
 ## Anti-cheat
 
