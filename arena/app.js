@@ -212,6 +212,13 @@
   }
 
   let lastVideo = null;
+  // `hydra video` renders videos after the run, so they live in run.json, not in kane_end events.
+  let videoByLabel = {};
+  function indexVideos(run) {
+    videoByLabel = {};
+    const ks = [...(run.baseline || []), ...(run.referee ? [run.referee.kane] : []), ...(run.rounds || []).flatMap((h) => h.verify || [])];
+    for (const k of ks) if (k && k.video) videoByLabel[k.label] = k.video;
+  }
   function renderKane() {
     const k = selectedKane();
     const pill = $("kane-verdict");
@@ -228,7 +235,7 @@
     }
     pill.textContent = k.verdict === "passed" ? "PASS · exit 0" : k.verdict === "failed" ? "FAIL · exit 1" : `INFRA · ${k.verdict}`;
     pill.className = `pill ${k.verdict === "passed" ? "pass" : k.verdict === "failed" ? "fail" : "warn"}`;
-    const src = api.file(currentRun, k.video);
+    const src = api.file(currentRun, k.video || videoByLabel[k.label]);
     if (src !== lastVideo) {
       lastVideo = src;
       if (src) {
@@ -248,7 +255,7 @@
     if (k.infraReason) row("Infra", k.infraReason);
     if (k.testUrl) row("ShareLink", el("a", { href: k.testUrl, target: "_blank", rel: "noopener noreferrer", text: "Open in Kane dashboard ↗" }));
     row("Duration", fmtMs(k.durationMs));
-    if (k.credits !== null && k.credits !== undefined) row("Credits", String(k.credits));
+    if (k.credits !== null && k.credits !== undefined) row("Credits", String(Math.round(k.credits * 10) / 10));
     row("Fresh run", k.fresh ? "yes (no cached replay)" : "no");
     for (const shot of (k.screenshots || []).slice(-6)) {
       const href = api.file(currentRun, shot);
@@ -438,6 +445,7 @@
     state = fresh();
     selectedTile = null;
     lastVideo = null;
+    videoByLabel = {};
     currentRun = runId;
     render();
     if (!runId) return;
@@ -445,6 +453,7 @@
     url.searchParams.set("run", runId);
     history.replaceState(null, "", url);
     const run = await api.run(runId);
+    indexVideos(run);
     const live = !STATIC && mode === "live" && run.status === "running" && !forceReplay;
     $("mode-badge").textContent = live ? "LIVE" : "REPLAY";
     $("mode-badge").className = `badge ${live ? "live" : "replay"}`;
