@@ -8,10 +8,20 @@ export type GroundTruthCheck = "main" | "holdout" | "invalid-email" | "double-cl
 
 export type Edit = { file: string; find: string; replace: string };
 
+/**
+ * How a bug shows up, which decides what a verifier must do to see it:
+ *  - math:  the wrong number for the given inputs (a formula or formatting error)
+ *  - state: right until an input changes (qty, remove, coupon), then wrong; a check that
+ *           does not click through the change cannot see it
+ *  - flow:  an action or request path breaks (submit, validation, server)
+ */
+export type Surface = "math" | "state" | "flow" | "mixed" | "unknown";
+
 export type Bug = {
   id: string;
   title: string;
   bugClass: "pricing" | "coupon" | "interaction" | "state" | "validation" | "concurrency" | "server" | "display" | "llm";
+  surface: Surface;
   /** What actually breaks. Recorded in the ledger; never shown to the builder. */
   description: string;
   edits: Edit[];
@@ -26,6 +36,7 @@ export const BUGS: readonly Bug[] = [
     id: "wrong-total",
     title: "Wrong total",
     bugClass: "pricing",
+    surface: "math",
     description: "Shipping is charged once per cart line instead of once per order, inflating the total.",
     edits: [
       {
@@ -42,6 +53,7 @@ export const BUGS: readonly Bug[] = [
     id: "coupon-ignored",
     title: "Coupon ignored",
     bugClass: "coupon",
+    surface: "math",
     description: "The coupon banner says the code applied, but the quote is computed without it.",
     edits: [
       {
@@ -58,6 +70,7 @@ export const BUGS: readonly Bug[] = [
     id: "dead-pay-button",
     title: "Dead pay button",
     bugClass: "interaction",
+    surface: "flow",
     description: "The Pay button is type=button, so clicking it never submits the payment form.",
     edits: [
       {
@@ -74,6 +87,7 @@ export const BUGS: readonly Bug[] = [
     id: "stale-cart",
     title: "Stale cart state",
     bugClass: "state",
+    surface: "state",
     description: "Remove mutates the cart array in place, so React never re-renders and the removed item lingers.",
     edits: [
       {
@@ -96,6 +110,7 @@ export const BUGS: readonly Bug[] = [
     id: "validation-bypass",
     title: "Validation bypass",
     bugClass: "validation",
+    surface: "flow",
     description: "Any card starting with 4242 skips name, email and card validation on client and server.",
     edits: [
       {
@@ -116,6 +131,7 @@ export const BUGS: readonly Bug[] = [
     id: "double-submit",
     title: "Double submit",
     bugClass: "concurrency",
+    surface: "flow",
     description: "The Pay button stays enabled while processing and each click gets a new idempotency key, so a double click creates two orders.",
     edits: [
       {
@@ -138,6 +154,7 @@ export const BUGS: readonly Bug[] = [
     id: "pay-500",
     title: "500 on pay",
     bugClass: "server",
+    surface: "flow",
     description: "The pay endpoint JSON-parses the coupon code, which throws for any real code and returns HTTP 500.",
     edits: [
       {
@@ -154,6 +171,7 @@ export const BUGS: readonly Bug[] = [
     id: "off-by-one-qty",
     title: "Off-by-one quantity",
     bugClass: "state",
+    surface: "state",
     description: "The + button increments the cart line one row below the one clicked.",
     edits: [
       {
@@ -171,6 +189,7 @@ export const BUGS: readonly Bug[] = [
     id: "currency-format",
     title: "Currency format",
     bugClass: "display",
+    surface: "math",
     description: "Cents are not zero-padded, so $58.00 renders as $58.0 and $4.00 as $4.0.",
     edits: [
       {
@@ -187,6 +206,7 @@ export const BUGS: readonly Bug[] = [
     id: "confirmation-amount",
     title: "Wrong charged amount",
     bugClass: "display",
+    surface: "math",
     description: "The confirmation page reports the pre-discount subtotal as the amount charged.",
     edits: [
       {
@@ -203,6 +223,7 @@ export const BUGS: readonly Bug[] = [
     id: "fixed-coupon-ignored",
     title: "Fixed-amount coupon broken",
     bugClass: "coupon",
+    surface: "math",
     description: "Fixed-amount coupons are divided by 100 a second time, so HOLIDAY5 takes off 5 cents.",
     edits: [
       { file: "lib/coupons.ts", find: ": coupon.amountCents;", replace: ": Math.round(coupon.amountCents / 100);" },
@@ -211,7 +232,46 @@ export const BUGS: readonly Bug[] = [
     kaneHypothesis: "missed",
     rationale: "Only the hidden holdout uses a fixed-amount coupon; the main spec cannot see it.",
   },
+  {
+    id: "stale-quote-on-qty",
+    title: "Stale quote after a quantity change",
+    bugClass: "state",
+    surface: "state",
+    description:
+      "The price quote is memoised on the number of cart lines instead of the lines themselves, so + and - change nothing on screen until an item is added or removed or a coupon is applied.",
+    edits: [
+      {
+        file: "components/Checkout.tsx",
+        find: "const quote = useMemo(() => computeQuote(lines, coupon), [lines, coupon]);",
+        replace:
+          "// eslint-disable-next-line react-hooks/exhaustive-deps -- only recompute when the cart grows or shrinks\n  const quote = useMemo(() => computeQuote(lines, coupon), [lines.length, coupon]);",
+      },
+    ],
+    breaks: ["main", "holdout"],
+    kaneHypothesis: "caught",
+    rationale:
+      "Correct after every add/remove and on coupon apply; wrong only right after a quantity click. The main spec checks the quantity immediately after clicking +, so Kane has to click through the change to see it.",
+  },
 ];
+
+/**
+ * Seeds map into this frozen pool so recorded seeds stay reproducible when bugs are added.
+ * Bugs added later are reachable with `--bug <id>`.
+ */
+const SEED_POOL_IDS = [
+  "wrong-total",
+  "coupon-ignored",
+  "dead-pay-button",
+  "stale-cart",
+  "validation-bypass",
+  "double-submit",
+  "pay-500",
+  "off-by-one-qty",
+  "currency-format",
+  "confirmation-amount",
+  "fixed-coupon-ignored",
+] as const;
+export const SEED_POOL: readonly Bug[] = SEED_POOL_IDS.map((id) => BUGS.find((b) => b.id === id)!);
 
 export function findBug(id: string): Bug | undefined {
   return BUGS.find((b) => b.id === id);
@@ -229,17 +289,17 @@ export function prng(seed: number): () => number {
   };
 }
 
-/** Seed -> bug. Stable across machines and releases as long as BUGS order is unchanged. */
+/** Seed -> bug. Stable across machines and releases: seeds only map into the frozen SEED_POOL. */
 export function bugForSeed(seed: number): Bug {
   if (!Number.isInteger(seed) || seed < 0) throw new Error(`Seed must be a non-negative integer, got ${seed}`);
   const r = prng(seed)();
-  return BUGS[Math.floor(r * BUGS.length)]!;
+  return SEED_POOL[Math.floor(r * SEED_POOL.length)]!;
 }
 
 /** Smallest seeds that map to each bug (for docs and `hydra chaos list`). */
 export function seedTable(limit = 500): Map<string, number> {
   const out = new Map<string, number>();
-  for (let s = 0; s < limit && out.size < BUGS.length; s++) {
+  for (let s = 0; s < limit && out.size < SEED_POOL.length; s++) {
     const b = bugForSeed(s);
     if (!out.has(b.id)) out.set(b.id, s);
   }

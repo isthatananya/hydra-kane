@@ -58,6 +58,7 @@ function bugInfo(bug: Bug, source: BugInfo["source"]): BugInfo {
     id: bug.id,
     title: bug.title,
     bugClass: bug.bugClass,
+    surface: bug.surface,
     description: bug.description,
     source,
     kaneHypothesis: bug.kaneHypothesis,

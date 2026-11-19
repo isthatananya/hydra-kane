@@ -83,6 +83,7 @@ export function compoundBug(parts: Bug[], workspace: string): Bug | null {
     id: parts.map((b) => b.id).join("+"),
     title: parts.map((b) => b.title).join(" + "),
     bugClass: parts[0]!.bugClass,
+    surface: new Set(parts.map((b) => b.surface)).size === 1 ? parts[0]!.surface : "mixed",
     description: parts.map((b) => b.description).join(" ALSO: "),
     edits,
     breaks: [...new Set(parts.flatMap((b) => b.breaks))],

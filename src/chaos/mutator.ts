@@ -83,6 +83,7 @@ export async function mutate(cfg: HydraConfig, baseWorkspace: string, scratchRoo
         id,
         title: "LLM mutation",
         bugClass: "llm",
+        surface: "unknown",
         description,
         edits: [],
         breaks: gt.failing,
