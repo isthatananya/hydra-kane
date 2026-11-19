@@ -47,7 +47,7 @@ Same seed, two builders (`hydra stats`):
 
 A heal costs about 6 Kane runs (≈280 credits, no infra retries) and about 10 minutes from injection to green.
 
-**Browse the runs:** [isthatananya.github.io/hydra-kane](https://isthatananya.github.io/hydra-kane/) is a static arena exported to
+**Browse the runs:** [isthatananya.github.io/hydra-kane/docs](https://isthatananya.github.io/hydra-kane/docs/) is a static arena exported to
 `docs/` with `hydra export-arena`, so it needs no backend and no Kane.
 
 ### Math bugs vs state bugs
