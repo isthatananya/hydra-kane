@@ -163,12 +163,13 @@ async function renderWebm(frames: Frame[], outFile: string, browser: import("pla
   }
 }
 
-/** Kane runs worth a video: the referee (the catch or the miss), then the last round's first main verify and holdout. */
+/** Kane runs worth a video: the referee (the catch or the miss), then the first main verify and holdout of the last round that verified. */
 function pickKanes(run: RunRecord): KaneRef[] {
   const out: KaneRef[] = [];
   if (run.referee) out.push(run.referee.kane);
-  // From the last round: the first fresh main pass (or failure) and the hidden holdout.
-  const last = run.rounds[run.rounds.length - 1];
+  // From the last round that verified anything (a builder that gives up leaves later rounds
+  // empty): the first fresh main pass (or failure) and the hidden holdout.
+  const last = [...run.rounds].reverse().find((h) => h.verify.length > 0);
   if (last) {
     const main = last.verify.find((v) => v.spec !== "holdout");
     const holdout = last.verify.find((v) => v.spec === "holdout");
