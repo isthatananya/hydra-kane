@@ -84,8 +84,14 @@ export async function validateBugs(cfg: HydraConfig, ids?: string[]): Promise<{ 
     const mark = confirmed ? c.green("confirmed") : c.red("NOT confirmed");
     log.info(`  ${bug.id.padEnd(22)} ${mark}  breaks: ${failing.join(", ") || "nothing"}${row.note ? c.dim(`  (${row.note.split("\n")[0]})`) : ""}`);
   }
+  // Merge with earlier results (like calibrate), so `--bug <id>` adds a row instead of wiping the file.
   const outFile = resolvePath(cfg, "chaos/validation.json");
-  writeJsonAtomic(outFile, { validatedAt: new Date().toISOString(), baselineOk, rows });
+  const existing = readJsonOr<{ rows: ValidationRow[] }>(outFile, { rows: [] });
+  const merged = new Map(existing.rows.map((r) => [r.bug, r]));
+  for (const r of rows) merged.set(r.bug, r);
+  const order = new Map(BUGS.map((b, i) => [b.id, i]));
+  const allRows = [...merged.values()].sort((a, b) => (order.get(a.bug) ?? 1e9) - (order.get(b.bug) ?? 1e9));
+  writeJsonAtomic(outFile, { validatedAt: new Date().toISOString(), baselineOk, rows: allRows });
   return { baselineOk, rows };
 }
 
