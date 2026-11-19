@@ -1,0 +1,441 @@
+{
+  "schema": 1,
+  "runId": "20261119-140125-s12-claude",
+  "seed": 12,
+  "builder": "claude",
+  "status": "healed",
+  "statusReason": "Healed in 1 round(s)",
+  "startedAt": "2026-11-19T08:31:25.213Z",
+  "endedAt": "2026-11-19T08:48:52.261Z",
+  "durationMs": 1047048,
+  "appUrl": "http://localhost:3100",
+  "bug": {
+    "id": "stale-cart",
+    "title": "Stale cart state",
+    "bugClass": "state",
+    "surface": "state",
+    "description": "Remove mutates the cart array in place, so React never re-renders and the removed item lingers.",
+    "source": "library",
+    "kaneHypothesis": "caught",
+    "breaks": [
+      "main"
+    ]
+  },
+  "chaosDiff": "chaos.patch",
+  "specs": [
+    {
+      "id": "checkout-main",
+      "role": "main",
+      "path": "specs/checkout.flow.md",
+      "hash": "ad6d87ce0589f9a89073d2d5eed4b798edb3fb62ed401bba14fd9227a3c98af5"
+    },
+    {
+      "id": "checkout-holdout",
+      "role": "holdout",
+      "path": "specs/holdout.flow.md",
+      "hash": "b0049072d83581497c43bb5d3fcc84de5009392879cff51e3e962a27e770f249"
+    }
+  ],
+  "baseline": [
+    {
+      "label": "baseline-1",
+      "spec": "main",
+      "attempt": 0,
+      "verdict": "passed",
+      "exitCode": 0,
+      "infraReason": null,
+      "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook.\nIncreased the Trail Mug quantity once, leaving 2 Trail Mugs and 1 Canvas Tote; the subtotal was $60.00.\nApplied coupon SAVE10, which discounted $6.00; with $4.00 shipping, the total was $58.00.\nEntered the requested payment details and submitted payment once.\nThe order was confirmed as ORD-1001, with $58.00 charged.",
+      "failingStep": null,
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SEXSSDMBRD5S2DC766FQ5S/dashboard/share/US_G94M3PSD12D059TTIQEX73X2CD3XABJJPMJ5F9H0QWH86ZAJX44P5VC2B8QF8Y7K?type=summary&agentView=true&fqdn=summary-page",
+      "evidenceDir": "kane/01-baseline-1",
+      "video": null,
+      "screenshots": [
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/1-0-1/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/2-0-2/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/3-0-3/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/4-0-4/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/5-0-5/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/6-0-6/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/7-0-7/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/8-0-8/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/9-0-9/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/10-0-10/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/11-0-11/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/12-0-12/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/13-0-13/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/14-0-14/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/15-0-15/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/16-0-16/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/17-0-17/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/18-0-18/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/19-0-19/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/20-0-20/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/21-0-21/annotated.png",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/22-0-22/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/23-0-23/screenshot.jpg",
+        "kane/01-baseline-1/pack/run-0/evidence/4bb72025-ec3f-4d72-8a63-e1606f106acb/tests/you-are-testing-the-hydra-supply-co-chec-46e49c8c/steps/24-0-24/screenshot.jpg"
+      ],
+      "durationMs": 187328,
+      "credits": 52.702429,
+      "fresh": true
+    },
+    {
+      "label": "baseline-2",
+      "spec": "main",
+      "attempt": 0,
+      "verdict": "passed",
+      "exitCode": 0,
+      "infraReason": null,
+      "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook so the cart contained Trail Mug and Canvas Tote only.\nIncreased the Trail Mug quantity once, resulting in 2 Trail Mugs and 1 Canvas Tote with a $60.00 subtotal.\nApplied the SAVE10 coupon, which gave a $6.00 discount; shipping was $4.00 and the total was $58.00.\nEntered the provided payment details and completed payment for $58.00.\nThe order was confirmed as ORD-1001, with $58.00 charged to the card.",
+      "failingStep": null,
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SF3GSAHQG7Y55WNC6QE0TX/dashboard/share/US_NB0TWLCU95Y3TTBYYRUM6K7B5XK0Q9OZ5FUJYTKLEBO7T7E4PFZ0B05WWCW5DEH8?type=summary&agentView=true&fqdn=summary-page",
+      "evidenceDir": "kane/02-baseline-2",
+      "video": null,
+      "screenshots": [
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/1-0-1/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/2-0-2/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/3-0-3/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/4-0-4/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/5-0-5/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/6-0-6/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/7-0-7/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/8-0-8/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/9-0-9/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/10-0-10/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/11-0-11/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/12-0-12/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/13-0-13/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/14-0-14/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/15-0-15/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/16-0-16/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/17-0-17/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/18-0-18/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/19-0-19/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/20-0-20/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/21-0-21/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/22-0-22/annotated.png",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/23-0-23/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/24-0-24/screenshot.jpg",
+        "kane/02-baseline-2/pack/run-0/evidence/4e0230ab-8f1a-47de-bbf6-3f9a4f25d03a/tests/you-are-testing-the-hydra-supply-co-chec-9f1dcd01/steps/25-0-25/screenshot.jpg"
+      ],
+      "durationMs": 177977,
+      "credits": 51.9237575,
+      "fresh": true
+    }
+  ],
+  "referee": {
+    "kane": {
+      "label": "referee",
+      "spec": "main",
+      "attempt": 0,
+      "verdict": "failed",
+      "exitCode": 1,
+      "infraReason": null,
+      "summary": "The cart's Remove control for Field Notebook did not update the cart after the agent selected it. The cart still showed all three products, leaving the run unable to reach the required cart state.\nFix the Field Notebook Remove control so that it removes that line item and refreshes the cart count and totals. Then rerun the checkout flow from the two-item cart checkpoint.\nevidence: objective_contradiction: press_key: PRIMARY: activate the focused \"Remove\" control for \"Field Notebook\" in the \"Your",
+      "failingStep": null,
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SF9BYNFX50MBAQ7F9591BV/dashboard/share/US_I7PBETG2OQGHMLGGDMW6BDE9BMOOBWQR8PJB1H8S7DWK1P9I7OWHEDVKIXR7HYIH?type=summary&agentView=true&fqdn=summary-page",
+      "evidenceDir": "kane/03-referee",
+      "video": null,
+      "screenshots": [
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/1-0-1/screenshot.jpg",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/2-0-2/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/3-0-3/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/4-0-4/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/5-0-5/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/6-0-6/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/7-0-7/screenshot.jpg",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/8-0-8/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/9-0-9/annotated.png",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/10-0-10/screenshot.jpg",
+        "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/11-0-11/screenshot.jpg"
+      ],
+      "durationMs": 141731,
+      "credits": 30.049940500000005,
+      "fresh": true
+    },
+    "verdict": "CATCH"
+  },
+  "specAgent": null,
+  "rounds": [
+    {
+      "round": 1,
+      "flowFed": "main",
+      "startedAt": "2026-11-19T08:40:23.526Z",
+      "durationMs": 501394,
+      "builder": {
+        "exitCode": 0,
+        "timedOut": false,
+        "durationMs": 21055,
+        "tokens": {
+          "input": 8,
+          "output": 765,
+          "cacheRead": 105578,
+          "cacheWrite": 17087,
+          "total": 123438,
+          "costUsd": 0.1731436
+        },
+        "log": "logs/builder-1.log"
+      },
+      "prompt": "prompts/heal-1.md",
+      "diff": "diffs/round-1.patch",
+      "filesChanged": [
+        "components/Checkout.tsx"
+      ],
+      "reverted": [],
+      "specIntegrity": "ok",
+      "build": {
+        "ok": true,
+        "durationMs": 4651
+      },
+      "verify": [
+        {
+          "label": "verify-1a",
+          "spec": "main",
+          "attempt": 0,
+          "verdict": "passed",
+          "exitCode": 0,
+          "infraReason": null,
+          "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook as requested.\nIncreased the Trail Mug quantity once, leaving Trail Mug at 2 and Canvas Tote at 1; the subtotal was $60.00.\nApplied coupon SAVE10, which discounted $6.00; shipping was $4.00 and the final total was $58.00.\nEntered the provided payment details and completed payment for $58.00.\nThe order was confirmed with order number ORD-1001, and $58.00 was charged.",
+          "failingStep": null,
+          "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SFEGC0ZRE5M3SFRRKEYN1P/dashboard/share/US_LQZ1TYN7HFDBVQAKZB75WLIIQJBALEUO96JW8B4SO14NU6Q7HAUD1FJGMBMO4VJE?type=summary&agentView=true&fqdn=summary-page",
+          "evidenceDir": "kane/04-verify-1a",
+          "video": null,
+          "screenshots": [
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/1-0-1/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/2-0-2/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/3-0-3/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/4-0-4/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/5-0-5/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/6-0-6/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/7-0-7/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/8-0-8/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/9-0-9/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/10-0-10/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/11-0-11/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/12-0-12/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/13-0-13/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/14-0-14/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/15-0-15/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/16-0-16/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/17-0-17/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/18-0-18/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/19-0-19/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/20-0-20/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/21-0-21/annotated.png",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/22-0-22/screenshot.jpg",
+            "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/23-0-23/screenshot.jpg"
+          ],
+          "durationMs": 167912,
+          "credits": 49.080967000000015,
+          "fresh": true
+        },
+        {
+          "label": "verify-1b",
+          "spec": "main",
+          "attempt": 0,
+          "verdict": "passed",
+          "exitCode": 0,
+          "infraReason": null,
+          "summary": "Added Trail Mug, Canvas Tote, and Field Notebook to the cart, then removed Field Notebook.\nIncreased the Trail Mug quantity once, leaving 2 Trail Mugs and 1 Canvas Tote; the subtotal was $60.00.\nApplied coupon SAVE10, which gave a -$6.00 discount; shipping was $4.00 and the total was $58.00.\nEntered the requested payment details and completed payment for $58.00.\nThe order was confirmed as ORD-1001, with $58.00 charged.",
+          "failingStep": null,
+          "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SFKM8V4NRKPTH8HQ376PMF/dashboard/share/US_0YUPLJKHRH65BBINYNT64KILLB4UNNR4VMBCONJ48A5MFVNRQ5HB2504KJT1D2JL?type=summary&agentView=true&fqdn=summary-page",
+          "evidenceDir": "kane/05-verify-1b",
+          "video": null,
+          "screenshots": [
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/1-0-1/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/2-0-2/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/3-0-3/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/4-0-4/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/5-0-5/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/6-0-6/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/7-0-7/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/8-0-8/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/9-0-9/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/10-0-10/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/11-0-11/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/12-0-12/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/13-0-13/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/14-0-14/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/15-0-15/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/16-0-16/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/17-0-17/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/18-0-18/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/19-0-19/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/20-0-20/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/21-0-21/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/22-0-22/annotated.png",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/23-0-23/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/24-0-24/screenshot.jpg",
+            "kane/05-verify-1b/pack/run-0/evidence/8511c069-1c8d-4cbc-8a7a-af82b596a593/tests/you-are-testing-the-hydra-supply-co-chec-1d6b1de7/steps/25-0-25/screenshot.jpg"
+          ],
+          "durationMs": 162691,
+          "credits": 45.434401,
+          "fresh": true
+        },
+        {
+          "label": "holdout-1",
+          "spec": "holdout",
+          "attempt": 0,
+          "verdict": "passed",
+          "exitCode": 0,
+          "infraReason": null,
+          "summary": "Added Field Notebook and Trail Mug to the cart, then increased the Field Notebook quantity exactly twice.\nVerified the cart contained 3 Field Notebooks and 1 Trail Mug, with a subtotal of $46.50.\nApplied coupon code HOLIDAY5; the cart showed a -$5.00 discount, $4.00 shipping, and a $45.50 total.\nEntered the requested payment details and submitted the $45.50 payment once.\nThe order was confirmed as ORD-1001, with $45.50 charged.",
+          "failingStep": null,
+          "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SFRK96Y9EPGVYWNMF6AJKJ/dashboard/share/US_JR2FW7SQFYFBTWGMMBDZ73EGAG0UW3TV6YSD29KT0NFLBH190I6NQGCP2B8ZDVVZ?type=summary&agentView=true&fqdn=summary-page",
+          "evidenceDir": "kane/06-holdout-1",
+          "video": null,
+          "screenshots": [
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/1-0-1/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/2-0-2/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/3-0-3/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/4-0-4/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/5-0-5/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/6-0-6/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/7-0-7/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/8-0-8/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/9-0-9/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/10-0-10/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/11-0-11/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/12-0-12/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/13-0-13/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/14-0-14/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/15-0-15/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/16-0-16/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/17-0-17/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/18-0-18/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/19-0-19/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/20-0-20/annotated.png",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/21-0-21/screenshot.jpg",
+            "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/22-0-22/screenshot.jpg"
+          ],
+          "durationMs": 143597,
+          "credits": 41.54200999999999,
+          "fresh": true
+        }
+      ],
+      "outcome": "healed"
+    }
+  ],
+  "gate": {
+    "decision": "promote",
+    "reasons": [
+      "2 fresh main passes",
+      "holdout passed",
+      "specs intact",
+      "source unchanged since verify"
+    ],
+    "checkedAt": "2026-11-19T08:48:44.920Z"
+  },
+  "deploy": {
+    "dir": "../../deployments/20261119-140125-s12-claude",
+    "manifest": "../../deployments/20261119-140125-s12-claude/manifest.json",
+    "command": null,
+    "exitCode": null
+  },
+  "groundTruth": {
+    "baseline": {
+      "available": true,
+      "results": [
+        {
+          "check": "main",
+          "passed": true,
+          "failure": null,
+          "durationMs": 2156
+        },
+        {
+          "check": "holdout",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1262
+        },
+        {
+          "check": "invalid-email",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1603
+        },
+        {
+          "check": "double-click",
+          "passed": true,
+          "failure": null,
+          "durationMs": 2300
+        }
+      ],
+      "failing": []
+    },
+    "chaos": {
+      "available": true,
+      "results": [
+        {
+          "check": "main",
+          "passed": false,
+          "failure": "Field Notebook still in cart after Remove",
+          "durationMs": 1067
+        },
+        {
+          "check": "holdout",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1283
+        },
+        {
+          "check": "invalid-email",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1592
+        },
+        {
+          "check": "double-click",
+          "passed": true,
+          "failure": null,
+          "durationMs": 2262
+        }
+      ],
+      "failing": [
+        "main"
+      ]
+    },
+    "final": {
+      "available": true,
+      "results": [
+        {
+          "check": "main",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1500
+        },
+        {
+          "check": "holdout",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1252
+        },
+        {
+          "check": "invalid-email",
+          "passed": true,
+          "failure": null,
+          "durationMs": 1619
+        },
+        {
+          "check": "double-click",
+          "passed": true,
+          "failure": null,
+          "durationMs": 2289
+        }
+      ],
+      "failing": []
+    }
+  },
+  "metrics": {
+    "kaneRuns": 6,
+    "kaneInfraRetries": 0,
+    "kaneCredits": 270.73350500000004,
+    "healRounds": 1,
+    "roundsToGreen": 1,
+    "timeToHealMs": 501396,
+    "tokensTotal": 123438,
+    "tokensPerHeal": 123438,
+    "holdoutFailures": 0,
+    "falseGreen": false
+  }
+}

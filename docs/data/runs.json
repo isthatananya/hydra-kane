@@ -1,17 +1,23 @@
 {
   "stats": {
-    "runs": 5,
-    "bugsInjected": 5,
-    "catches": 4,
+    "runs": 6,
+    "bugsInjected": 6,
+    "catches": 5,
     "misses": 1,
-    "detectionRate": 0.8,
-    "healed": 2,
+    "detectionRate": 0.8333333333333334,
+    "healed": 3,
     "avgRoundsToGreen": 1,
-    "avgTimeToHealMs": 596360.5,
-    "avgTokensPerHeal": 276428.5,
-    "holdoutFailRate": 0.3333333333333333,
+    "avgTimeToHealMs": 564705.6666666666,
+    "avgTokensPerHeal": 225431.66666666666,
+    "holdoutFailRate": 0.25,
     "falseGreens": 0,
     "byClass": {
+      "state": {
+        "injected": 1,
+        "caught": 1,
+        "missed": 0,
+        "healed": 1
+      },
       "pricing": {
         "injected": 4,
         "caught": 4,
@@ -24,9 +30,44 @@
         "missed": 1,
         "healed": 0
       }
+    },
+    "bySurface": {
+      "state": {
+        "injected": 1,
+        "caught": 1,
+        "missed": 0,
+        "healed": 1
+      },
+      "math": {
+        "injected": 4,
+        "caught": 4,
+        "missed": 0,
+        "healed": 2
+      },
+      "flow": {
+        "injected": 1,
+        "caught": 0,
+        "missed": 1,
+        "healed": 0
+      }
     }
   },
   "runs": [
+    {
+      "runId": "20261119-140125-s12-claude",
+      "seed": 12,
+      "builder": "claude",
+      "status": "healed",
+      "bug": {
+        "id": "stale-cart",
+        "bugClass": "state",
+        "surface": "state"
+      },
+      "verdict": "CATCH",
+      "startedAt": "2026-11-19T08:31:25.213Z",
+      "durationMs": 1047048,
+      "rounds": 1
+    },
     {
       "runId": "20261119-022046-s7-opencode",
       "seed": 7,
@@ -34,7 +75,8 @@
       "status": "healed",
       "bug": {
         "id": "wrong-total",
-        "bugClass": "pricing"
+        "bugClass": "pricing",
+        "surface": "math"
       },
       "verdict": "CATCH",
       "startedAt": "2026-11-18T20:50:46.512Z",
@@ -48,7 +90,8 @@
       "status": "aborted",
       "bug": {
         "id": "wrong-total",
-        "bugClass": "pricing"
+        "bugClass": "pricing",
+        "surface": "math"
       },
       "verdict": "CATCH",
       "startedAt": "2026-11-18T20:16:45.190Z",
@@ -62,7 +105,8 @@
       "status": "miss",
       "bug": {
         "id": "validation-bypass",
-        "bugClass": "validation"
+        "bugClass": "validation",
+        "surface": "flow"
       },
       "verdict": "MISS",
       "startedAt": "2026-11-18T20:01:12.763Z",
@@ -76,7 +120,8 @@
       "status": "rejected",
       "bug": {
         "id": "wrong-total",
-        "bugClass": "pricing"
+        "bugClass": "pricing",
+        "surface": "math"
       },
       "verdict": "CATCH",
       "startedAt": "2026-11-18T19:36:07.034Z",
@@ -90,7 +135,8 @@
       "status": "healed",
       "bug": {
         "id": "wrong-total",
-        "bugClass": "pricing"
+        "bugClass": "pricing",
+        "surface": "math"
       },
       "verdict": "CATCH",
       "startedAt": "2026-11-18T19:07:57.466Z",

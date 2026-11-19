@@ -1,0 +1,16 @@
+===================================================================
+--- a/components/Checkout.tsx
++++ b/components/Checkout.tsx
+@@ -45,11 +45,7 @@
+   }
+ 
+   function remove(sku: string) {
+-    setLines((current) => {
+-      const index = current.findIndex((l) => l.sku === sku);
+-      if (index >= 0) current.splice(index, 1);
+-      return current;
+-    });
++    setLines((current) => current.filter((l) => l.sku !== sku));
+   }
+ 
+   async function pay(details: PaymentDetails): Promise<{ ok: true } | { ok: false; error: string; errors?: FieldErrors }> {

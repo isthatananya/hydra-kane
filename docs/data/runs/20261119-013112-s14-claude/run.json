@@ -18,7 +18,8 @@
     "kaneHypothesis": "missed",
     "breaks": [
       "invalid-email"
-    ]
+    ],
+    "surface": "flow"
   },
   "chaosDiff": "chaos.patch",
   "specs": [
