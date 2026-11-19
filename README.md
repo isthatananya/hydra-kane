@@ -81,7 +81,8 @@ builder Kane's raw evidence lines, not just the summary.
 | `hydra run --seed N [--builder claude] [--bug id] [--mutator] [--escalate]` | Full loop. Exit 0 healed, 1 aborted/rejected, 2 infra/config, 3 MISS |
 | `hydra replay <seed>` / `hydra demo --replay` | Replay a recorded run in the arena from the ledger and stored evidence |
 | `hydra arena` / `hydra export-arena -o docs` | Live spectator view (SSE) / static export for a public URL (GitHub Pages) |
-| `hydra demo-pack --run <id...>` | Bundle finished runs (ledger + displayed evidence only, ~4 MB each) into `demo/` |
+| `hydra video --run <id...>` | Render a WebM per Kane run (referee, first verify, holdout) from Kane's step screenshots, since Kane saves no local video |
+| `hydra demo-pack --run <id...>` | Bundle finished runs (ledger + displayed evidence + videos) into `demo/` |
 | `hydra verify [--url] [--spec] [--claude-stop-hook]` | One-shot Kane check of the running app (0 pass, 1 fail, 2 infra) |
 | `hydra chaos list \| seed N \| validate \| calibrate` | Inspect the bug library, prove each bug breaks the app, measure Kane's real detection |
 | `hydra soak -n 10` | Run the main spec N times on the unmodified app and count flakes |
