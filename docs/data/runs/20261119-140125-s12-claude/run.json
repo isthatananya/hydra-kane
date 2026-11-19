@@ -135,7 +135,7 @@
       "failingStep": null,
       "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SF9BYNFX50MBAQ7F9591BV/dashboard/share/US_I7PBETG2OQGHMLGGDMW6BDE9BMOOBWQR8PJB1H8S7DWK1P9I7OWHEDVKIXR7HYIH?type=summary&agentView=true&fqdn=summary-page",
       "evidenceDir": "kane/03-referee",
-      "video": null,
+      "video": "videos/referee.webm",
       "screenshots": [
         "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/1-0-1/screenshot.jpg",
         "kane/03-referee/pack/run-0/evidence/d8f16143-692a-40d1-b2f5-28a469a2b3ff/tests/you-are-testing-the-hydra-supply-co-chec-07b57d3f/steps/2-0-2/annotated.png",
@@ -199,7 +199,7 @@
           "failingStep": null,
           "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SFEGC0ZRE5M3SFRRKEYN1P/dashboard/share/US_LQZ1TYN7HFDBVQAKZB75WLIIQJBALEUO96JW8B4SO14NU6Q7HAUD1FJGMBMO4VJE?type=summary&agentView=true&fqdn=summary-page",
           "evidenceDir": "kane/04-verify-1a",
-          "video": null,
+          "video": "videos/verify-1a.webm",
           "screenshots": [
             "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/1-0-1/screenshot.jpg",
             "kane/04-verify-1a/pack/run-0/evidence/6b62dfba-5b28-472e-8535-988ddf13e125/tests/you-are-testing-the-hydra-supply-co-chec-093136ea/steps/2-0-2/annotated.png",
@@ -283,7 +283,7 @@
           "failingStep": null,
           "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SFRK96Y9EPGVYWNMF6AJKJ/dashboard/share/US_JR2FW7SQFYFBTWGMMBDZ73EGAG0UW3TV6YSD29KT0NFLBH190I6NQGCP2B8ZDVVZ?type=summary&agentView=true&fqdn=summary-page",
           "evidenceDir": "kane/06-holdout-1",
-          "video": null,
+          "video": "videos/holdout-1.webm",
           "screenshots": [
             "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/1-0-1/screenshot.jpg",
             "kane/06-holdout-1/pack/run-0/evidence/70d948d5-ce8b-4866-ad6a-76beeb579ac1/tests/you-are-testing-the-hydra-supply-co-chec-1f1dc1dd/steps/2-0-2/screenshot.jpg",
