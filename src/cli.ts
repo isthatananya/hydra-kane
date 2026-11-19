@@ -5,6 +5,7 @@ import { Command, Option } from "commander";
 import { ConfigError, loadConfig, resolvePath, stateDir, type HydraConfig } from "./config.js";
 import { startArena } from "./arena/server.js";
 import { exportArena, packRecording } from "./arena/export.js";
+import { makeVideos } from "./video.js";
 import { AppServer, buildApp, portFree } from "./app/server.js";
 import { bench, benchTable } from "./bench.js";
 import { compoundBug } from "./chaos/engine.js";
@@ -177,6 +178,18 @@ program
     const { url } = await startArena({ stateDir: dir, port: o.port ?? cfg.arena.port, mode: "live" });
     log.ok(`arena at ${c.bold(url)} — Ctrl+C to exit`);
     await waitForever();
+  });
+
+program
+  .command("video")
+  .description("Render a WebM per Kane run (referee + final verify) from Kane's step screenshots; the arena plays it")
+  .requiredOption("--run <id...>", "run ids")
+  .option("--state <dir>", "state directory (default: .hydra)")
+  .option("--force", "re-render videos that already exist")
+  .action(async (o, cmd: Command) => {
+    const cfg = cfgFrom(cmd);
+    const r = await makeVideos(o.state ? resolve(o.state) : stateDir(cfg), o.run, { force: o.force });
+    log.ok(`rendered ${r.videos} video(s), ${Math.round(r.bytes / 1024)} KB`);
   });
 
 program
