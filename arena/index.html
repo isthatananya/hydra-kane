@@ -36,6 +36,30 @@
   </header>
 
   <main id="main" tabindex="-1">
+    <div id="home" hidden>
+      <section class="home-hero">
+        <div class="wrap">
+          <p class="label">Hydra Arena</p>
+          <h1 class="home-title">An AI builds an app.<br />Chaos breaks it.<br /><span class="kane-word">Kane</span> has to catch it.</h1>
+          <p class="home-lead measure">Every run below is a real recording. A coding agent ships a checkout app, Hydra secretly plants one bug, and Kane CLI tests it in a real browser. If Kane catches the bug, the agent has to fix it using only Kane's evidence, and the fix only ships if fresh Kane runs and a hidden test pass. Some builders try to cheat.</p>
+          <ol class="home-steps">
+            <li><span class="step-n">1</span><span><strong>Build.</strong> An agent builds the app. Kane checks it twice while it is still clean.</span></li>
+            <li><span class="step-n">2</span><span><strong>Break.</strong> Hydra hides one bug in the code. Nobody is told which.</span></li>
+            <li><span class="step-n">3</span><span><strong>Catch.</strong> Kane runs its test in a browser and reports what it saw.</span></li>
+            <li><span class="step-n">4</span><span><strong>Heal.</strong> The agent gets only Kane's report and must fix the app. A gate checks it didn't cheat.</span></li>
+          </ol>
+        </div>
+      </section>
+      <section class="wrap band" aria-labelledby="pick-h">
+        <div class="band-head">
+          <h2 id="pick-h" class="section-h">Pick a run to watch</h2>
+          <p id="home-count" class="ink-2"></p>
+        </div>
+        <ul id="run-cards" class="run-cards"></ul>
+      </section>
+    </div>
+
+    <div id="report">
     <section class="hero" aria-labelledby="verdict-word">
       <div class="wrap hero-grid">
         <div class="hero-main">
@@ -43,6 +67,10 @@
           <h1 id="verdict-word" class="verdict-word">Loading</h1>
           <p id="verdict-sentence" class="verdict-sentence"></p>
           <p id="matchup" class="matchup"></p>
+          <div class="hero-actions">
+            <button id="hero-watch" class="watch-btn" type="button">Watch it unfold</button>
+            <a class="link-btn back-link" href="./">All runs</a>
+          </div>
         </div>
         <dl id="facts" class="facts"></dl>
       </div>
@@ -127,6 +155,7 @@
         <div class="table-wrap"><table id="across-table" class="table"></table></div>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="foot">

@@ -299,10 +299,12 @@
       word.classList.add("reveal");
     }
     lastStatus = state.status;
-    $("hero-label").textContent = state.status ? "Result" : live ? "Live" : "In play";
+    $("hero-label").textContent = state.status ? "Result" : live ? "Live" : player.playing ? "Replaying" : "Paused";
+    $("hero-watch").hidden = player.playing || live;
+    $("hero-watch").textContent = state.status ? "Watch it unfold" : "Watch from the start";
     $("verdict-sentence").textContent = copy.sentence;
     if (run) {
-      const parts = [`seed ${run.seed}`, `builder ${run.builder}`, `bug ${bugLabel(state.bug ? run.bug || state.bug : null)}`];
+      const parts = [`seed ${run.seed}`, `builder ${run.builder}`, `${state.bug ? `bug ${bugLabel(run.bug || state.bug)}` : "bug not hidden yet"}`];
       if (state.status) parts.push(fmtDur(run.durationMs), plural(run.rounds.length, "round"));
       $("matchup").textContent = parts.join(" · ");
     }
@@ -962,6 +964,7 @@
     const b = $("btn-play");
     b.replaceChildren(icon(player.playing ? "pause" : "play"));
     b.setAttribute("aria-label", player.playing ? "Pause replay" : "Play replay");
+    const hw = $("hero-watch"); if (hw) hw.hidden = player.playing || live;
     const r = $("btn-replay");
     r.replaceChildren(icon("rotate"), "Replay this run");
   }
@@ -1200,13 +1203,47 @@
     $("controls").classList.toggle("live", live);
   }
 
-  function chooseRun(runId) {
+  function chooseRun(runId, opts = { autoplay: true }) {
     const url = new URL(location.href);
     url.searchParams.set("run", runId);
     url.searchParams.delete("t");
     url.hash = "";
-    history.replaceState(null, "", url);
-    load(runId, {});
+    history.pushState(null, "", url);
+    load(runId, opts);
+  }
+
+  // ── Landing: what Hydra is, and the runs to pick from ───────────────────
+  const STORY = {
+    healed: (r) => `Kane caught the ${r.bug ? r.bug.id : ""} bug. The builder fixed it from Kane's evidence alone, and the fix shipped.`,
+    rejected: () => "Kane caught the bug. The builder edited Kane's test instead of fixing the code. The gate caught that too.",
+    miss: (r) => `Kane's test passed with the ${r.bug ? r.bug.id : ""} bug still in the app. An honest miss.`,
+    aborted: (r) => r.holdoutFailures ? "The fix fooled Kane's visible test twice, then failed the hidden one. Nothing shipped." : "The run stopped before a fix shipped.",
+    running: () => "Happening right now.",
+  };
+  function showHome() {
+    stopSource();
+    currentRun = null;
+    $("home").hidden = false;
+    $("report").hidden = true;
+    document.title = "Hydra Arena";
+    const runs = runsIndex.runs || [];
+    $("home-count").textContent = runs.length ? plural(runs.length, "recorded run") : "";
+    const cards = $("run-cards");
+    if (!runs.length) {
+      cards.replaceChildren(el("li", { class: "empty" }, "No runs yet. Start one with: hydra run"));
+    } else {
+      cards.replaceChildren(...runs.map((r) => {
+        const [word, mk, tone] = OUTCOME[r.status] || [r.status, "dot", ""];
+        return el("li", {}, el("button", { type: "button", class: "run-card", onclick: () => chooseRun(r.runId) },
+          el("span", { class: `rc-word ${tone || "muted"}` }, mark(mk), word),
+          el("span", { class: "rc-story", text: (STORY[r.status] || (() => ""))(r) }),
+          el("span", { class: "rc-meta", text: `${builderName(r.builder)} · ${r.bug ? r.bug.id : "no bug"} · seed ${r.seed} · ${fmtDur(r.durationMs)}` }),
+          el("span", { class: "rc-go", text: "Watch the run" }),
+        ));
+      }));
+    }
+    renderPicker();
+    window.scrollTo(0, 0);
   }
 
   async function load(runId, opts) {
@@ -1225,6 +1262,9 @@
     logRendered = -1;
     expanded.clear();
     currentRun = runId;
+    $("home").hidden = true;
+    $("report").hidden = false;
+    window.scrollTo(0, 0);
     renderPicker();
     if (!runId) { render(); return; }
     run = await api.run(runId);
@@ -1242,7 +1282,11 @@
     }
     player.events = await api.events(runId);
     if (opts.moment) { selected = opts.moment; userSelected = true; }
-    if (opts.t !== undefined && opts.t !== null && !Number.isNaN(opts.t)) {
+    if (opts.autoplay) {
+      applyUntil(0);
+      render();
+      play();
+    } else if (opts.t !== undefined && opts.t !== null && !Number.isNaN(opts.t)) {
       applyUntil(0);
       seekTime(opts.t * 1000);
     } else {
@@ -1274,6 +1318,7 @@
     for (const b of document.querySelectorAll(".speed button")) b.addEventListener("click", () => setSpeed(Number(b.dataset.speed)));
     $("btn-play").addEventListener("click", () => (player.playing ? pause() : play()));
     $("btn-replay").addEventListener("click", replayFromStart);
+    $("hero-watch").addEventListener("click", replayFromStart);
     $("btn-end").addEventListener("click", skipToEnd);
     $("log").addEventListener("toggle", () => { logRendered = -1; renderLog(); });
     vertical.addEventListener("change", () => render());
@@ -1285,15 +1330,19 @@
     await refreshRuns();
     const url = new URL(location.href);
     const runs = runsIndex.runs || [];
-    const wanted = url.searchParams.get("run") || cfg.focusRun || (runs.find((r) => r.status === "running") || runs[0] || {}).runId;
+    const wanted = url.searchParams.get("run") || cfg.focusRun || (runs.find((r) => r.status === "running") || {}).runId;
     const moment = /moment=([\w-]+)/.exec(location.hash);
     const t = url.searchParams.get("t");
     if (wanted && runs.some((r) => r.runId === wanted)) {
       await load(wanted, { moment: moment ? moment[1] : null, t: t !== null ? Number(t) : null });
     } else {
-      $("verdict-word").textContent = runs.length ? "Choose a run" : "No runs yet";
-      $("verdict-sentence").textContent = runs.length ? "Pick a recorded run from the list at the top." : "Start one with: hydra run";
+      showHome();
     }
+    window.addEventListener("popstate", () => {
+      const id = new URL(location.href).searchParams.get("run");
+      if (id && runsIndex.runs.some((r) => r.runId === id)) load(id, {});
+      else showHome();
+    });
 
     if (!STATIC && mode === "live") {
       setInterval(async () => {
