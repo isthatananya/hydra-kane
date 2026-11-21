@@ -1,5 +1,5 @@
 /** Export recorded runs as a static site (GitHub Pages etc.) — the public, no-backend arena. */
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { aggregate, bugSurface, listRuns, readEvents, type RunRecord } from "../ledger.js";
 import { copyTree, ensureDir, removeTree, writeJsonAtomic } from "../util/fs.js";
@@ -152,7 +152,8 @@ function calibrationSummary(): { caught: number; total: number } | null {
 }
 
 export function exportArena(stateDir: string, outDir: string, opts: { runIds?: string[] } = {}): { runs: number; files: number } {
-  removeTree(outDir);
+  // Clear the previous export but keep hidden deploy config (.vercel, .gitignore, .env.local).
+  if (existsSync(outDir)) for (const name of readdirSync(outDir)) if (!name.startsWith(".")) removeTree(join(outDir, name));
   ensureDir(outDir);
   copyTree(ARENA_UI_DIR, outDir);
   const html = readFileSync(join(outDir, "index.html"), "utf8").replace(
