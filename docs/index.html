@@ -4,106 +4,193 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hydra Arena</title>
-  <meta name="description" content="Live and replay spectator view of Hydra's build → chaos → Kane → heal loop." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2310b981'/%3E%3Cpath d='M9 8v16M23 8v16M9 16h14' stroke='%23062018' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <meta name="description" content="Match reports for Hydra runs: a builder ships, chaos hides a bug, Kane CLI referees in a real browser." />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316181c'/%3E%3Cpath d='M11 7v18M21 7v18M11 16h10' stroke='%23eef0f3' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E" />
+  <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="style.css" />
+  <script>
+    // Apply a saved theme before first paint, so the page never flashes the wrong one.
+    try { const t = localStorage.getItem("hydra-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+  </script>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to the result</a>
+
   <header class="top">
-    <div class="brand">
-      <span class="logo" aria-hidden="true">H</span>
-      <div>
-        <h1>Hydra Arena</h1>
-        <p class="sub">builder ships · chaos breaks · <strong>Kane referees</strong></p>
-      </div>
-    </div>
-    <div class="controls">
-      <label class="sr" for="run-select">Run</label>
-      <select id="run-select" aria-label="Select a run"></select>
-      <span id="mode-badge" class="badge">—</span>
-      <div class="replay" id="replay-controls" hidden>
-        <button id="btn-play" type="button" aria-label="Pause replay">❚❚</button>
-        <button id="btn-restart" type="button" aria-label="Restart replay">↺</button>
-        <label class="sr" for="speed">Replay speed</label>
-        <select id="speed" aria-label="Replay speed">
-          <option value="1">1×</option>
-          <option value="4" selected>4×</option>
-          <option value="16">16×</option>
-          <option value="0">instant</option>
-        </select>
+    <div class="wrap top-row">
+      <a class="wordmark" href="./" aria-label="Hydra Arena home"><span class="wm-hydra">HYDRA</span><span class="wm-arena">Arena</span></a>
+      <p class="tagline">builder ships · chaos breaks · Kane referees</p>
+      <div class="top-actions">
+        <button id="help-btn" class="link-btn" type="button">What am I looking at?</button>
+        <div class="picker">
+          <button id="run-btn" class="picker-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="run-list">
+            <span id="run-btn-text">Loading runs…</span>
+          </button>
+          <ul id="run-list" class="picker-list" role="listbox" aria-label="Recorded runs" tabindex="-1" hidden></ul>
+        </div>
+        <span id="mode" class="mode">Replay</span>
+        <button id="theme-btn" class="icon-btn" type="button" aria-label="Switch to light theme"></button>
       </div>
     </div>
   </header>
 
-  <main>
-    <section class="pipeline" aria-label="Loop phases">
-      <ol id="phases"></ol>
-      <div class="status-line"><span id="status-text">Waiting for a run…</span></div>
-      <div id="live-region" class="sr" aria-live="polite" aria-atomic="true"></div>
-    </section>
-
-    <section class="scoreboard" aria-labelledby="sb-h">
-      <h2 id="sb-h">Scoreboard</h2>
-      <ol id="tiles" class="tiles"></ol>
-    </section>
-
-    <div class="grid">
-      <section class="card kane" aria-labelledby="kane-h">
-        <header class="card-h">
-          <h2 id="kane-h">Kane verdict</h2>
-          <span id="kane-verdict" class="pill">—</span>
-        </header>
-        <div class="video-wrap">
-          <video id="kane-video" controls muted playsinline preload="metadata"></video>
-          <div id="video-empty" class="video-empty">No Kane run yet</div>
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="verdict-word">
+      <div class="wrap hero-grid">
+        <div class="hero-main">
+          <p class="label" id="hero-label">Result</p>
+          <h1 id="verdict-word" class="verdict-word">Loading</h1>
+          <p id="verdict-sentence" class="verdict-sentence"></p>
+          <p id="matchup" class="matchup"></p>
         </div>
-        <dl class="kv" id="kane-details"></dl>
-        <div id="shots" class="shots"></div>
-      </section>
+        <dl id="facts" class="facts"></dl>
+      </div>
+    </section>
 
-      <section class="card" aria-labelledby="diff-h">
-        <header class="card-h">
-          <h2 id="diff-h">Builder patch</h2>
-          <span id="diff-meta" class="muted small"></span>
-        </header>
-        <pre id="diff" class="diff" tabindex="0" aria-label="Builder patch"><span class="muted">The builder has not patched yet.</span></pre>
-      </section>
+    <section class="wrap band" aria-labelledby="track-h">
+      <div class="band-head">
+        <h2 id="track-h" class="section-h">Match timeline</h2>
+        <p id="clock" class="clock mono" aria-hidden="true"></p>
+      </div>
+      <div class="controls" id="controls">
+        <button id="btn-play" class="icon-btn" type="button" aria-label="Play replay"></button>
+        <button id="btn-replay" class="text-btn" type="button"></button>
+        <div class="speed" role="group" aria-label="Replay speed">
+          <button type="button" data-speed="1" aria-pressed="false">1×</button>
+          <button type="button" data-speed="4" aria-pressed="true">4×</button>
+          <button type="button" data-speed="16" aria-pressed="false">16×</button>
+        </div>
+        <button id="btn-end" class="text-btn" type="button">Skip to end</button>
+        <button id="btn-keys" class="icon-btn" type="button" aria-label="Keyboard shortcuts" aria-haspopup="dialog"></button>
+      </div>
+      <div class="track" id="track">
+        <div class="rail" id="rail" role="slider" tabindex="0" aria-label="Replay position" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+          <div class="rail-line"><div class="rail-played" id="rail-played"></div></div>
+          <div class="playhead" id="playhead" aria-hidden="true"></div>
+        </div>
+        <ol class="phase-ticks" id="phase-ticks" aria-label="Phases"></ol>
+        <ol class="marks" id="marks" aria-label="Events on the timeline"></ol>
+      </div>
+    </section>
 
-      <section class="card" aria-labelledby="chaos-h">
-        <header class="card-h">
-          <h2 id="chaos-h">Chaos <span class="muted small">(hidden from the builder)</span></h2>
-          <span id="chaos-class" class="pill">—</span>
-        </header>
-        <p id="chaos-desc" class="muted">No bug injected yet.</p>
-        <details>
+    <section class="wrap band" aria-labelledby="moments-h">
+      <h2 id="moments-h" class="section-h">Key moments</h2>
+      <ol id="moments" class="moments"></ol>
+    </section>
+
+    <section class="wrap band" aria-labelledby="evidence-h" id="evidence">
+      <div class="band-head">
+        <h2 id="evidence-h" class="section-h">Evidence</h2>
+        <p id="evidence-sub" class="ink-2"></p>
+      </div>
+      <div class="evidence-grid">
+        <div id="ev-main" class="ev-main"></div>
+        <div id="ev-side" class="ev-side"></div>
+      </div>
+    </section>
+
+    <section class="wrap band chaos-grid" aria-label="The hidden bug and ground truth">
+      <div>
+        <p class="label">Hidden from the builder</p>
+        <h2 class="section-h" id="bug-h">The hidden bug</h2>
+        <p id="bug-name" class="bug-name mono"></p>
+        <p id="bug-desc" class="measure"></p>
+        <details class="disclosure">
           <summary>Injected diff</summary>
-          <pre id="chaos-diff" class="diff small-diff"></pre>
+          <pre id="chaos-diff" class="diff" tabindex="0" aria-label="Injected chaos diff"></pre>
         </details>
-        <h3>Ground truth</h3>
-        <p class="muted small">Scripted oracle checks. They label Kane's verdicts; they never gate a deploy.</p>
-        <div id="gt" class="gt"></div>
-      </section>
+      </div>
+      <div>
+        <p class="label">Scored, never gating</p>
+        <h2 class="section-h">Ground truth</h2>
+        <p class="ink-2 measure"><button type="button" class="term" data-term="oracle">Oracle</button> checks label Kane's verdicts. They never gate a deploy.</p>
+        <div class="table-wrap"><table id="gt" class="table"></table></div>
+      </div>
+    </section>
 
-      <section class="card" aria-labelledby="stats-h">
-        <header class="card-h">
-          <h2 id="stats-h">Detection quality</h2>
-          <span class="muted small">all recorded runs</span>
-        </header>
-        <div id="stats" class="stats"></div>
-        <h3>Bug-class heatmap</h3>
-        <div id="heatmap" class="heatmap"></div>
-      </section>
-    </div>
+    <section class="wrap band" aria-labelledby="log-h">
+      <details id="log" class="log">
+        <summary><h2 id="log-h" class="section-h inline">Event log</h2> <span id="log-count" class="ink-2"></span></summary>
+        <div class="chips" id="log-chips" role="group" aria-label="Filter events by type"></div>
+        <ol id="log-list" class="log-list"></ol>
+      </details>
+    </section>
 
-    <section class="card log" aria-labelledby="log-h">
-      <header class="card-h"><h2 id="log-h">Timeline</h2><span id="clock" class="muted small"></span></header>
-      <ol id="timeline" class="timeline"></ol>
+    <section class="wrap band across" aria-labelledby="across-h">
+      <h2 id="across-h" class="section-h">Across all runs</h2>
+      <p class="ink-2">Every recorded run in this arena, not only the one above.</p>
+      <p id="across-lead" class="across-lead measure"></p>
+      <p id="across-cal" class="ink-2 measure"></p>
+      <div class="across-grid">
+        <dl id="across-dl" class="kv"></dl>
+        <div class="table-wrap"><table id="across-table" class="table"></table></div>
+      </div>
     </section>
   </main>
 
-  <footer class="foot muted small">
-    Hydra · Kane CLI is the only verifier · evidence is archived locally because ShareLinks expire
+  <footer class="foot">
+    <div class="wrap foot-row">
+      <p>Kane CLI is the only verifier · evidence is archived here because Kane ShareLinks expire</p>
+      <p><button type="button" class="link-btn" id="foot-glossary">Glossary</button> · <a href="https://github.com/isthatananya/hydra-kane">Repository</a></p>
+    </div>
   </footer>
+
+  <dialog id="glossary" class="sheet" aria-labelledby="glossary-h">
+    <div class="sheet-head">
+      <h2 id="glossary-h" class="section-h">What am I looking at?</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Close glossary"></button>
+    </div>
+    <p class="ink-2">Hydra tests whether a coding agent can fix a bug it never sees. A chaos step hides one bug in the app, Kane CLI checks the app in a real browser, and the agent only gets Kane's evidence. Each page is one run, read like a match report.</p>
+    <dl class="glossary">
+      <dt id="g-builder">Builder</dt><dd>The coding agent under test. It writes and patches the app.</dd>
+      <dt id="g-chaos">Chaos</dt><dd>The step that hides one bug in the builder's code. The builder is not told what or where.</dd>
+      <dt id="g-kane">Kane</dt><dd>The referee: a CLI that runs the app in a real browser against a plain-English spec and returns PASS (exit 0) or FAIL (exit 1).</dd>
+      <dt id="g-baseline">Baseline</dt><dd>Two Kane runs before the bug goes in, to prove the specs pass on clean code. If they don't, the run doesn't count.</dd>
+      <dt id="g-heal">Heal</dt><dd>The builder gets Kane's failure evidence as its only prompt and patches the code.</dd>
+      <dt id="g-verify">Verify</dt><dd>Kane runs again after a patch. Two fresh passes are needed.</dd>
+      <dt id="g-holdout">Holdout</dt><dd>A second checkout the builder never sees (other coupon, other quantities). It catches fixes fitted to the visible spec.</dd>
+      <dt id="g-oracle">Oracle, ground truth</dt><dd>Scripted checks that know the real answer. They score Kane's verdicts. They never gate a deploy.</dd>
+      <dt id="g-false-green">False green</dt><dd>Kane said PASS while the oracle said FAIL.</dd>
+      <dt id="g-gate">Deploy gate</dt><dd>The last check: two fresh passes, the holdout passed, specs unchanged, source unchanged since verify. It has no override.</dd>
+      <dt id="g-tamper">Spec tamper</dt><dd>The builder changed a Kane spec file. The gate rejects the round and restores the spec.</dd>
+      <dt id="g-miss">Miss</dt><dd>Kane passed while the bug was present. Hydra logs it instead of hiding it.</dd>
+      <dt id="g-credits">Kane credits</dt><dd>Kane's usage cost for a run, as reported by kane-cli.</dd>
+      <dt id="g-sharelink">ShareLink</dt><dd>A link to the run in Kane's dashboard. It expires, so the evidence is also archived here.</dd>
+    </dl>
+  </dialog>
+
+  <dialog id="lightbox" class="lightbox" aria-labelledby="lb-caption">
+    <div class="lb-bar">
+      <p id="lb-count" class="mono ink-2"></p>
+      <button type="button" class="icon-btn" data-close aria-label="Close screenshot"></button>
+    </div>
+    <figure>
+      <img id="lb-img" alt="" />
+      <figcaption id="lb-caption"></figcaption>
+    </figure>
+    <div class="lb-nav">
+      <button type="button" class="text-btn" id="lb-prev">Previous</button>
+      <button type="button" class="text-btn" id="lb-next">Next</button>
+    </div>
+  </dialog>
+
+  <dialog id="keys" class="sheet small" aria-labelledby="keys-h">
+    <div class="sheet-head">
+      <h2 id="keys-h" class="section-h">Keyboard shortcuts</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Close shortcuts"></button>
+    </div>
+    <dl class="keys">
+      <dt><kbd>Space</kbd></dt><dd>Play or pause</dd>
+      <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous or next event</dd>
+      <dt><kbd>Shift</kbd> + <kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous or next key moment</dd>
+      <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>Start or end of the run</dd>
+      <dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Speed 1×, 4×, 16×</dd>
+      <dt><kbd>?</kbd></dt><dd>This list</dd>
+    </dl>
+  </dialog>
+
+  <div id="live-region" class="sr" aria-live="polite" aria-atomic="true"></div>
   <script>window.HYDRA_STATIC = true;</script>
   <script src="app.js"></script>
 </body>
