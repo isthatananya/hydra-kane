@@ -1,0 +1,15 @@
+{
+  "kind": "analyze",
+  "status": "passed",
+  "summary": "analyze: the Subtotal shows exactly \"$46.50\"",
+  "duration_ms": 19969.0,
+  "url": "http://localhost:3100/",
+  "action_id": "8108086c-84a6-4b8a-8a6c-421c9797a0a0",
+  "analyze_action_ids": [
+    "5a1696af-27dc-438a-b4ee-6a5ed2009431",
+    "bb6fb667-7bc0-4f3f-a36c-7fe981623652",
+    "8108086c-84a6-4b8a-8a6c-421c9797a0a0"
+  ],
+  "ordinal": 6,
+  "id": "0-6"
+}

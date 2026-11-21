@@ -1,0 +1,16 @@
+{
+  "kind": "type",
+  "status": "passed",
+  "summary": "type: Type \"grace@example.org\" into \"Email\"",
+  "duration_ms": 93.0,
+  "url": "http://localhost:3100/",
+  "action_id": "aac928a5-3445-4a20-8283-8de44400e744",
+  "element_rect": {
+    "x": 1193,
+    "y": 276,
+    "width": 322,
+    "height": 21
+  },
+  "ordinal": 18,
+  "id": "0-18"
+}

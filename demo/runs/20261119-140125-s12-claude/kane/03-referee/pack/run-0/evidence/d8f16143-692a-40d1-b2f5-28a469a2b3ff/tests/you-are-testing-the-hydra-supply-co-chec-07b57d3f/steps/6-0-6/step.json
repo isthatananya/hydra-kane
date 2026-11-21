@@ -1,0 +1,16 @@
+{
+  "kind": "click",
+  "status": "passed",
+  "summary": "click: Clicking Remove for Field Notebook in Your cart",
+  "duration_ms": 7078.0,
+  "url": "http://localhost:3100/",
+  "action_id": "c6c811b0-51b1-4337-b906-8a64cd077239",
+  "element_rect": {
+    "x": 1075,
+    "y": 313,
+    "width": 56,
+    "height": 21
+  },
+  "ordinal": 6,
+  "id": "0-6"
+}

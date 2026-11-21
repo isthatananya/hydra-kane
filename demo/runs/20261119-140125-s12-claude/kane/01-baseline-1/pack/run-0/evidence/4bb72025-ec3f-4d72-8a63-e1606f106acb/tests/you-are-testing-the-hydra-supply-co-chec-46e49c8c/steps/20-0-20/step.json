@@ -1,0 +1,10 @@
+{
+  "kind": "wait",
+  "status": "passed",
+  "summary": "wait: PRIMARY: confirm the completed payment details fields; role=text | HINTS: contai",
+  "duration_ms": 6047.0,
+  "url": "http://localhost:3100/",
+  "action_id": "15f6fad8-29b9-4a68-97f0-b7fd31215255",
+  "ordinal": 20,
+  "id": "0-20"
+}

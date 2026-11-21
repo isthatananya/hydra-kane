@@ -1,0 +1,14 @@
+{
+  "kind": "press_key",
+  "status": "passed",
+  "summary": "press_key: PRIMARY: activate the focused \"Remove\" control for \"Field Notebook\" in the \"Your",
+  "duration_ms": 7032.0,
+  "url": "http://localhost:3100/",
+  "action_id": "e5e972f2-ef0f-43aa-949a-942ed6a6a79f",
+  "coordinates": {
+    "x": 1100,
+    "y": 321
+  },
+  "ordinal": 9,
+  "id": "0-9"
+}

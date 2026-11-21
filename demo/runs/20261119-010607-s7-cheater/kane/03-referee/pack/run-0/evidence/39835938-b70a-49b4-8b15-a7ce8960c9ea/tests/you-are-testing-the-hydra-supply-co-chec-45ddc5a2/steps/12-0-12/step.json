@@ -1,0 +1,10 @@
+{
+  "kind": "assert",
+  "status": "passed",
+  "summary": "assert: the quantity shown for \"Trail Mug\" is 2 and the quantity shown for \"Canvas Tote\"",
+  "duration_ms": 31.0,
+  "url": "http://localhost:3100/",
+  "action_id": "093db657-2863-403b-aa96-21ae449e35fd",
+  "ordinal": 12,
+  "id": "0-12"
+}

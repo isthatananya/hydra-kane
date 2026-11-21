@@ -1,0 +1,16 @@
+{
+  "kind": "type",
+  "status": "passed",
+  "summary": "type: Type \"SAVE10\" into \"Coupon code\"",
+  "duration_ms": 109.0,
+  "url": "http://localhost:3100/",
+  "action_id": "8c754fd6-709e-4413-abe4-34d925f6da08",
+  "element_rect": {
+    "x": 798,
+    "y": 339,
+    "width": 247,
+    "height": 21
+  },
+  "ordinal": 13,
+  "id": "0-13"
+}

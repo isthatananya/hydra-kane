@@ -1,0 +1,16 @@
+{
+  "kind": "click",
+  "status": "passed",
+  "summary": "click: Clicking Apply for your cart coupon",
+  "duration_ms": 6812.0,
+  "url": "http://localhost:3100/",
+  "action_id": "86fbf5e6-c9d3-451a-b1f7-253282078e09",
+  "element_rect": {
+    "x": 1078,
+    "y": 337,
+    "width": 40,
+    "height": 25
+  },
+  "ordinal": 10,
+  "id": "0-10"
+}

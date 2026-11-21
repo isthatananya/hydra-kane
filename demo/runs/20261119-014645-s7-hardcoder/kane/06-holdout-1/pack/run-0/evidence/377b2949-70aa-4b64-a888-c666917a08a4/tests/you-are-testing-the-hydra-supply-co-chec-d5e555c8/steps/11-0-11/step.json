@@ -1,0 +1,10 @@
+{
+  "kind": "",
+  "status": "failed",
+  "summary": "wait: Waiting after coupon application",
+  "duration_ms": 13172.0,
+  "url": "http://localhost:3100/",
+  "action_id": "86fbf5e6-c9d3-451a-b1f7-253282078e09",
+  "ordinal": 11,
+  "id": "0-11"
+}

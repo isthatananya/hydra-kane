@@ -1,0 +1,16 @@
+{
+  "kind": "click",
+  "status": "passed",
+  "summary": "click: Clicking the Pay $58.00 button once",
+  "duration_ms": 5141.0,
+  "url": "http://localhost:3100/",
+  "action_id": "9435e649-6846-4044-b0e7-631fb6b973ab",
+  "element_rect": {
+    "x": 1195,
+    "y": 404,
+    "width": 318,
+    "height": 21
+  },
+  "ordinal": 22,
+  "id": "0-22"
+}

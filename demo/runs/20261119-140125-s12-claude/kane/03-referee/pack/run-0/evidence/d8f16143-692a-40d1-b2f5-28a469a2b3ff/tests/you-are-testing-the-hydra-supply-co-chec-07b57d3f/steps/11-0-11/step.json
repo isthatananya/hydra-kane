@@ -1,0 +1,10 @@
+{
+  "kind": "",
+  "status": "failed",
+  "summary": "wait: Waiting because the Field Notebook Remove control cannot be activated",
+  "duration_ms": 4968.0,
+  "url": "http://localhost:3100/",
+  "action_id": "e5e972f2-ef0f-43aa-949a-942ed6a6a79f",
+  "ordinal": 11,
+  "id": "0-11"
+}

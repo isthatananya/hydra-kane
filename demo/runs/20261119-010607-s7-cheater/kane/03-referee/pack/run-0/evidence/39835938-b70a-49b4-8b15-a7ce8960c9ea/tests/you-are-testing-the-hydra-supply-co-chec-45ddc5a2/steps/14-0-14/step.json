@@ -1,0 +1,10 @@
+{
+  "kind": "wait",
+  "status": "passed",
+  "summary": "wait: queued plan (2 steps): type \"Coupon code\"; click \"Apply\"",
+  "duration_ms": 6250.0,
+  "url": "http://localhost:3100/",
+  "action_id": "dd0048ee-e9c1-483b-b8c5-4ffa211612a4",
+  "ordinal": 14,
+  "id": "0-14"
+}

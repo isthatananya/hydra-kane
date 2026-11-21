@@ -1,0 +1,10 @@
+{
+  "kind": "",
+  "status": "passed",
+  "summary": "wait: Waiting after attempts to remove Field Notebook from the Your cart section",
+  "duration_ms": 5531.0,
+  "url": "http://localhost:3100/",
+  "action_id": "e5e972f2-ef0f-43aa-949a-942ed6a6a79f",
+  "ordinal": 10,
+  "id": "0-10"
+}

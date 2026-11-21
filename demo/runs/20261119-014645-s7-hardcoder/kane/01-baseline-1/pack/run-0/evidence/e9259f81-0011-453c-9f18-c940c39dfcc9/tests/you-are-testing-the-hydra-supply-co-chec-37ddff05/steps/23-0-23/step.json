@@ -1,0 +1,10 @@
+{
+  "kind": "wait",
+  "status": "passed",
+  "summary": "wait: PRIMARY: confirm the completed Payment form fields remain populated",
+  "duration_ms": 6156.0,
+  "url": "http://localhost:3100/",
+  "action_id": "a0aa30de-7dcd-42ab-a517-769d2c9bc6b3",
+  "ordinal": 23,
+  "id": "0-23"
+}

@@ -1,0 +1,16 @@
+{
+  "kind": "type",
+  "status": "passed",
+  "summary": "type: Type \"Ada Lovelace\" into \"Name on card\"",
+  "duration_ms": 109.0,
+  "url": "http://localhost:3100/",
+  "action_id": "3447d756-7b4e-4489-95f3-dbbae7fd89ef",
+  "element_rect": {
+    "x": 1193,
+    "y": 203,
+    "width": 322,
+    "height": 21
+  },
+  "ordinal": 21,
+  "id": "0-21"
+}

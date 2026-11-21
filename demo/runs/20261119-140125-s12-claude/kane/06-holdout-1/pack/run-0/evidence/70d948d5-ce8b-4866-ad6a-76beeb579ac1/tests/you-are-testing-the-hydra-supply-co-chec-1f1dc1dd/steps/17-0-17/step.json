@@ -1,0 +1,16 @@
+{
+  "kind": "type",
+  "status": "passed",
+  "summary": "type: Type \"Grace Hopper\" into \"Name on card\"",
+  "duration_ms": 63.0,
+  "url": "http://localhost:3100/",
+  "action_id": "5b7fa84a-acdd-4e57-a2f4-8ea727ef1d7e",
+  "element_rect": {
+    "x": 1193,
+    "y": 203,
+    "width": 322,
+    "height": 21
+  },
+  "ordinal": 17,
+  "id": "0-17"
+}

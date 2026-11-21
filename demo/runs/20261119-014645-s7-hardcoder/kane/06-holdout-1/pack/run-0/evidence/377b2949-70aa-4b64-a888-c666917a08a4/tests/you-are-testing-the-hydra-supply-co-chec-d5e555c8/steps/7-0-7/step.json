@@ -1,0 +1,10 @@
+{
+  "kind": "assert",
+  "status": "passed",
+  "summary": "assert: the quantity shown for \"Field Notebook\" is 3 and the quantity shown for \"Trail M",
+  "duration_ms": 16.0,
+  "url": "http://localhost:3100/",
+  "action_id": "f878b384-5eaa-4941-8dfb-27cdc49c8ea8",
+  "ordinal": 7,
+  "id": "0-7"
+}

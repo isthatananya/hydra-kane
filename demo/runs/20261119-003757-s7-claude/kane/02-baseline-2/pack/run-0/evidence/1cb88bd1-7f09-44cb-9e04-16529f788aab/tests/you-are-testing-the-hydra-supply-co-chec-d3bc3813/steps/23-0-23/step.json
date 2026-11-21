@@ -1,0 +1,10 @@
+{
+  "kind": "wait",
+  "status": "passed",
+  "summary": "wait: PRIMARY: wait for the order confirmation page to load",
+  "duration_ms": 7110.0,
+  "url": "http://localhost:3100/order/ORD-1001",
+  "action_id": "a22b34e6-8788-4a9d-912c-b355a175f3c3",
+  "ordinal": 23,
+  "id": "0-23"
+}

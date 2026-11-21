@@ -1,0 +1,10 @@
+{
+  "kind": "assert",
+  "status": "passed",
+  "summary": "assert: the Subtotal shows exactly \"$60.00\"",
+  "duration_ms": 15.0,
+  "url": "http://localhost:3100/",
+  "action_id": "1414ea9d-7910-46f5-b8a7-4474487aedf9",
+  "ordinal": 13,
+  "id": "0-13"
+}

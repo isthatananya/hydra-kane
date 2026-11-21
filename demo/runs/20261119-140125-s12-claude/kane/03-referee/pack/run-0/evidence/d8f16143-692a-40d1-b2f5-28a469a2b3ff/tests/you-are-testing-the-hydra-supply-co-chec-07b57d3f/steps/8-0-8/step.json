@@ -1,0 +1,14 @@
+{
+  "kind": "click",
+  "status": "passed",
+  "summary": "click: PRIMARY: In the \"Your cart\" section, click \"Remove\" for \"Field Notebook\"; role=b",
+  "duration_ms": 8922.0,
+  "url": "http://localhost:3100/",
+  "action_id": "21641c72-43de-4df7-999a-c08db3f3cd37",
+  "coordinates": {
+    "x": 1100,
+    "y": 321
+  },
+  "ordinal": 8,
+  "id": "0-8"
+}

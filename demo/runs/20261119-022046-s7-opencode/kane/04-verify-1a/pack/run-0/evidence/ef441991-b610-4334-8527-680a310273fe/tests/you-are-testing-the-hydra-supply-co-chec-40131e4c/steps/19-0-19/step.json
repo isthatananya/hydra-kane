@@ -1,0 +1,16 @@
+{
+  "kind": "type",
+  "status": "passed",
+  "summary": "type: Type \"ada@example.com\" into \"Email\"",
+  "duration_ms": 110.0,
+  "url": "http://localhost:3100/",
+  "action_id": "357d88fa-f812-48be-a88a-5042c893d031",
+  "element_rect": {
+    "x": 1193,
+    "y": 276,
+    "width": 322,
+    "height": 21
+  },
+  "ordinal": 19,
+  "id": "0-19"
+}

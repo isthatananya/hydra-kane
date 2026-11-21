@@ -1,0 +1,16 @@
+{
+  "kind": "type",
+  "status": "passed",
+  "summary": "type: Type \"4242 4242 4242 4242\" into \"Card number\"",
+  "duration_ms": 171.0,
+  "url": "http://localhost:3100/",
+  "action_id": "80d6e929-f9ce-4a46-ad07-17489ddde88e",
+  "element_rect": {
+    "x": 1193,
+    "y": 349,
+    "width": 322,
+    "height": 21
+  },
+  "ordinal": 22,
+  "id": "0-22"
+}

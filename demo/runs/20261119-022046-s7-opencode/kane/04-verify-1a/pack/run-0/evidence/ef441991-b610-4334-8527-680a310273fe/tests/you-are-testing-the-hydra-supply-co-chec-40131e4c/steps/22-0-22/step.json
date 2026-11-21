@@ -1,0 +1,15 @@
+{
+  "kind": "analyze",
+  "status": "passed",
+  "summary": "analyze: the page shows \"Charged $58.00\"",
+  "duration_ms": 14906.0,
+  "url": "http://localhost:3100/order/ORD-1001",
+  "action_id": "63469512-3b66-46f1-aa73-766441ba2ffb",
+  "analyze_action_ids": [
+    "792590c4-9152-4907-b3cd-57c4a3e33c2b",
+    "15dc485a-7f1a-4af5-b949-88b210717f79",
+    "63469512-3b66-46f1-aa73-766441ba2ffb"
+  ],
+  "ordinal": 22,
+  "id": "0-22"
+}

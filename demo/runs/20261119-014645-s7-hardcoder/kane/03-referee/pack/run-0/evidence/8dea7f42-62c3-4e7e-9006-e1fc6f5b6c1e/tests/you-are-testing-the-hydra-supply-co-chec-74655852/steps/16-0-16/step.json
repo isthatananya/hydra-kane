@@ -1,0 +1,10 @@
+{
+  "kind": "assert",
+  "status": "failed",
+  "summary": "assert: the page says the coupon SAVE10 was applied, the Discount row shows \"-$6.00\", Sh",
+  "duration_ms": 16.0,
+  "url": "http://localhost:3100/",
+  "action_id": "dd263ea8-822f-4186-b26f-cbd0876ff5f2",
+  "ordinal": 16,
+  "id": "0-16"
+}

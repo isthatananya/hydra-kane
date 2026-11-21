@@ -1,0 +1,10 @@
+{
+  "kind": "wait",
+  "status": "passed",
+  "summary": "wait: PRIMARY: confirm completed payment details entry",
+  "duration_ms": 9266.0,
+  "url": "http://localhost:3100/",
+  "action_id": "c1bd9f62-92d3-4a74-9e63-806ea1b86225",
+  "ordinal": 21,
+  "id": "0-21"
+}

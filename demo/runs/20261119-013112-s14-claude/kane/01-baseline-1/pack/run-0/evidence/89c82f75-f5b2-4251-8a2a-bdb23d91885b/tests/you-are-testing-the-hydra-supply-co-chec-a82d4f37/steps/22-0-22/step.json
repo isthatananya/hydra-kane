@@ -1,0 +1,10 @@
+{
+  "kind": "wait",
+  "status": "passed",
+  "summary": "wait: PRIMARY: wait for the heading \"Order confirmed\" to be visible",
+  "duration_ms": 7797.0,
+  "url": "http://localhost:3100/order/ORD-1001",
+  "action_id": "5736f3fa-fd0b-4cde-aab7-79726f652e9a",
+  "ordinal": 22,
+  "id": "0-22"
+}

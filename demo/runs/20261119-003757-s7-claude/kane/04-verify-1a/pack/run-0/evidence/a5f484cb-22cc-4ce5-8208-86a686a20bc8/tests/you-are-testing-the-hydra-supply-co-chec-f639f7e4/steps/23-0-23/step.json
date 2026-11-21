@@ -1,0 +1,10 @@
+{
+  "kind": "assert",
+  "status": "passed",
+  "summary": "assert: the page shows \"Order confirmed\", the order number \"ORD-1001\", and \"Charged $58.",
+  "duration_ms": 0.0,
+  "url": "http://localhost:3100/order/ORD-1001",
+  "action_id": "5ec59a72-84b2-45a3-b6a7-91dab8309413",
+  "ordinal": 23,
+  "id": "0-23"
+}

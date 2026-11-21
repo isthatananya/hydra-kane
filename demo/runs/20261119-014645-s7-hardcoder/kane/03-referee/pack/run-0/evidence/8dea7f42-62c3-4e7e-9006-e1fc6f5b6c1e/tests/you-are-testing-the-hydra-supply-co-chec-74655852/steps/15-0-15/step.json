@@ -1,0 +1,16 @@
+{
+  "kind": "analyze",
+  "status": "passed",
+  "summary": "analyze: the Total shows exactly \"$58.00\"",
+  "duration_ms": 13906.0,
+  "url": "http://localhost:3100/",
+  "action_id": "41637dc2-ea1c-4d03-a1c8-8dc087296e37",
+  "analyze_action_ids": [
+    "deb926d0-5f10-4c03-a0cd-225991b1906a",
+    "6012e988-c557-43c6-8847-a7497aafe6dc",
+    "88a0d253-42a2-4a6f-9b3c-dbe29ef75957",
+    "41637dc2-ea1c-4d03-a1c8-8dc087296e37"
+  ],
+  "ordinal": 15,
+  "id": "0-15"
+}
