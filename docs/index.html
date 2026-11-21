@@ -39,11 +39,12 @@
     <section class="pipeline" aria-label="Loop phases">
       <ol id="phases"></ol>
       <div class="status-line"><span id="status-text">Waiting for a run…</span></div>
+      <div id="live-region" class="sr" aria-live="polite" aria-atomic="true"></div>
     </section>
 
     <section class="scoreboard" aria-labelledby="sb-h">
-      <h2 id="sb-h">Scoreboard <span class="muted">FAIL → patch → PASS</span></h2>
-      <div id="tiles" class="tiles" role="list"></div>
+      <h2 id="sb-h">Scoreboard</h2>
+      <ol id="tiles" class="tiles"></ol>
     </section>
 
     <div class="grid">
@@ -54,7 +55,7 @@
         </header>
         <div class="video-wrap">
           <video id="kane-video" controls muted playsinline preload="metadata"></video>
-          <div id="video-empty" class="video-empty">No video yet</div>
+          <div id="video-empty" class="video-empty">No Kane run yet</div>
         </div>
         <dl class="kv" id="kane-details"></dl>
         <div id="shots" class="shots"></div>
@@ -65,7 +66,7 @@
           <h2 id="diff-h">Builder patch</h2>
           <span id="diff-meta" class="muted small"></span>
         </header>
-        <pre id="diff" class="diff" tabindex="0"><span class="muted">No patch yet.</span></pre>
+        <pre id="diff" class="diff" tabindex="0" aria-label="Builder patch"><span class="muted">The builder has not patched yet.</span></pre>
       </section>
 
       <section class="card" aria-labelledby="chaos-h">

@@ -78,7 +78,8 @@ main { max-width: 1400px; margin: 0 auto; padding: 16px; display: grid; gap: 16p
 #status-text strong { font-weight: 800; }
 
 .scoreboard h2 { margin-bottom: 8px; }
-.tiles { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+.tiles { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; list-style: none; margin: 0; padding: 0; }
+.tiles > li { display: flex; gap: 8px; align-items: stretch; }
 .tile {
   min-width: 96px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel);
   display: flex; flex-direction: column; gap: 2px; cursor: default; text-align: left;
@@ -151,3 +152,7 @@ details summary { cursor: pointer; color: var(--muted); margin-top: 6px; }
 .timeline .m { overflow-wrap: anywhere; }
 
 .foot { text-align: center; padding: 16px; }
+
+/* Visible keyboard focus on every interactive element */
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.tile.selected:focus-visible { outline-color: var(--ink); }

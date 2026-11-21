@@ -250,5 +250,25 @@
     "tokensPerHeal": null,
     "holdoutFailures": 0,
     "falseGreen": null
+  },
+  "captions": {
+    "kane/01-baseline-1/pack/run-0/evidence/89c82f75-f5b2-4251-8a2a-bdb23d91885b/tests/you-are-testing-the-hydra-supply-co-chec-a82d4f37/steps/19-0-19/annotated.png": "Step 19 · PASSED · type: Type \"ada@example.com\" into \"Email\"",
+    "kane/01-baseline-1/pack/run-0/evidence/89c82f75-f5b2-4251-8a2a-bdb23d91885b/tests/you-are-testing-the-hydra-supply-co-chec-a82d4f37/steps/20-0-20/annotated.png": "Step 20 · PASSED · type: Type \"4242 4242 4242 4242\" into \"Card number\"",
+    "kane/01-baseline-1/pack/run-0/evidence/89c82f75-f5b2-4251-8a2a-bdb23d91885b/tests/you-are-testing-the-hydra-supply-co-chec-a82d4f37/steps/21-0-21/annotated.png": "Step 21 · PASSED · click: Clicking the Pay $58.00 button",
+    "kane/01-baseline-1/pack/run-0/evidence/89c82f75-f5b2-4251-8a2a-bdb23d91885b/tests/you-are-testing-the-hydra-supply-co-chec-a82d4f37/steps/22-0-22/screenshot.jpg": "Step 22 · PASSED · wait: PRIMARY: wait for the heading \"Order confirmed\" to be visible",
+    "kane/01-baseline-1/pack/run-0/evidence/89c82f75-f5b2-4251-8a2a-bdb23d91885b/tests/you-are-testing-the-hydra-supply-co-chec-a82d4f37/steps/23-0-23/screenshot.jpg": "Step 23 · PASSED · analyze: the page shows \"Charged $58.00\"",
+    "kane/01-baseline-1/pack/run-0/evidence/89c82f75-f5b2-4251-8a2a-bdb23d91885b/tests/you-are-testing-the-hydra-supply-co-chec-a82d4f37/steps/24-0-24/screenshot.jpg": "Step 24 · PASSED · assert: the page shows \"Order confirmed\", the order number \"ORD-1001\", and \"Charged $58.",
+    "kane/02-baseline-2/pack/run-0/evidence/5ccd158a-ae7a-4143-9335-b2ab815ea122/tests/you-are-testing-the-hydra-supply-co-chec-6ec20651/steps/20-0-20/annotated.png": "Step 20 · PASSED · type: Type \"Ada Lovelace\" into \"Name on card\"",
+    "kane/02-baseline-2/pack/run-0/evidence/5ccd158a-ae7a-4143-9335-b2ab815ea122/tests/you-are-testing-the-hydra-supply-co-chec-6ec20651/steps/21-0-21/annotated.png": "Step 21 · PASSED · type: Type \"ada@example.com\" into \"Email\"",
+    "kane/02-baseline-2/pack/run-0/evidence/5ccd158a-ae7a-4143-9335-b2ab815ea122/tests/you-are-testing-the-hydra-supply-co-chec-6ec20651/steps/22-0-22/annotated.png": "Step 22 · PASSED · type: Type \"4242 4242 4242 4242\" into \"Card number\"",
+    "kane/02-baseline-2/pack/run-0/evidence/5ccd158a-ae7a-4143-9335-b2ab815ea122/tests/you-are-testing-the-hydra-supply-co-chec-6ec20651/steps/23-0-23/annotated.png": "Step 23 · PASSED · click: Clicking the Pay $58.00 button once",
+    "kane/02-baseline-2/pack/run-0/evidence/5ccd158a-ae7a-4143-9335-b2ab815ea122/tests/you-are-testing-the-hydra-supply-co-chec-6ec20651/steps/24-0-24/screenshot.jpg": "Step 24 · PASSED · analyze: the page shows \"Charged $58.00\"",
+    "kane/02-baseline-2/pack/run-0/evidence/5ccd158a-ae7a-4143-9335-b2ab815ea122/tests/you-are-testing-the-hydra-supply-co-chec-6ec20651/steps/25-0-25/screenshot.jpg": "Step 25 · PASSED · assert: the page shows \"Order confirmed\", the order number \"ORD-1001\", and \"Charged $58.",
+    "kane/03-referee/pack/run-0/evidence/5f605458-014d-4561-8ab7-5766f10b4e79/tests/you-are-testing-the-hydra-supply-co-chec-7c9bf62e/steps/21-0-21/annotated.png": "Step 21 · PASSED · type: Type \"ada@example.com\" into \"Email\"",
+    "kane/03-referee/pack/run-0/evidence/5f605458-014d-4561-8ab7-5766f10b4e79/tests/you-are-testing-the-hydra-supply-co-chec-7c9bf62e/steps/22-0-22/annotated.png": "Step 22 · PASSED · type: Type \"4242 4242 4242 4242\" into \"Card number\"",
+    "kane/03-referee/pack/run-0/evidence/5f605458-014d-4561-8ab7-5766f10b4e79/tests/you-are-testing-the-hydra-supply-co-chec-7c9bf62e/steps/23-0-23/annotated.png": "Step 23 · PASSED · click: Clicking the Pay $58.00 button in the payment details form",
+    "kane/03-referee/pack/run-0/evidence/5f605458-014d-4561-8ab7-5766f10b4e79/tests/you-are-testing-the-hydra-supply-co-chec-7c9bf62e/steps/24-0-24/screenshot.jpg": "Step 24 · PASSED · wait: PRIMARY: wait for the order confirmation heading to be visible",
+    "kane/03-referee/pack/run-0/evidence/5f605458-014d-4561-8ab7-5766f10b4e79/tests/you-are-testing-the-hydra-supply-co-chec-7c9bf62e/steps/25-0-25/screenshot.jpg": "Step 25 · PASSED · analyze: the page shows \"Charged $58.00\"",
+    "kane/03-referee/pack/run-0/evidence/5f605458-014d-4561-8ab7-5766f10b4e79/tests/you-are-testing-the-hydra-supply-co-chec-7c9bf62e/steps/26-0-26/screenshot.jpg": "Step 26 · PASSED · assert: the page shows \"Order confirmed\", the order number \"ORD-1001\", and \"Charged $58."
   }
 }

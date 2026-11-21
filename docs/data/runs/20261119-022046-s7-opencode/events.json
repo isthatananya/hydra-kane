@@ -303,7 +303,7 @@
     "verdict": "failed",
     "exitCode": 1,
     "infraReason": null,
-    "summary": "The checkout pricing display is calculating or using the wrong shipping amount after the coupon is applied. The 10% discount appears, but the shipping charge remains $8.00, so the final total is too high.\nReview the shipping calculation used after a coupon is applied. For this cart, preserve the $6.00 discount but charge $4.00 shipping so the displayed total is $58.00.\nevidence: objective_contradiction: Checkpoint assertion failed: \"the page says the coupon SAVE10 was applied, the Discount row shows \"-$6.00\", Shipping sho",
+    "summary": "The checkout pricing display is calculating or using the wrong shipping amount after the coupon is applied. The 10% discount appears, but the shipping charge remains $8.00, so the final total is too high.\nReview the shipping calculation used after a coupon is applied. For this cart, preserve the $6.00 discount but charge $4.00 shipping so the displayed total is $58.00.\nevidence: objective_contradiction: Checkpoint assertion failed: \"the page says the coupon SAVE10 was applied, the Discount row shows \"-$6.00\", Shipping …",
     "failingStep": null,
     "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7R78KB13FY6XZQRRH8MD8ZA/dashboard/share/US_H0R9CKHJ1FZDIN8RE6JV4R68X7252TUOAJCGGZ6NP6PFLCS5GMD9RVPXBQ78YF6N?type=summary&agentView=true&fqdn=summary-page",
     "evidenceDir": "kane/03-referee",

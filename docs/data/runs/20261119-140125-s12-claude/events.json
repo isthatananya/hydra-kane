@@ -301,7 +301,7 @@
     "verdict": "failed",
     "exitCode": 1,
     "infraReason": null,
-    "summary": "The cart's Remove control for Field Notebook did not update the cart after the agent selected it. The cart still showed all three products, leaving the run unable to reach the required cart state.\nFix the Field Notebook Remove control so that it removes that line item and refreshes the cart count and totals. Then rerun the checkout flow from the two-item cart checkpoint.\nevidence: objective_contradiction: press_key: PRIMARY: activate the focused \"Remove\" control for \"Field Notebook\" in the \"Your",
+    "summary": "The cart's Remove control for Field Notebook did not update the cart after the agent selected it. The cart still showed all three products, leaving the run unable to reach the required cart state.\nFix the Field Notebook Remove control so that it removes that line item and refreshes the cart count and totals. Then rerun the checkout flow from the two-item cart checkpoint.\nevidence: objective_contradiction: press_key: PRIMARY: activate the focused \"Remove\" control for \"Field Notebook\" in the …",
     "failingStep": null,
     "testUrl": "https://test-manager.lambdatest.com/projects/01M7QMJZXZHZEHKD5P7YP1D077/test-cases/01M7SF9BYNFX50MBAQ7F9591BV/dashboard/share/US_I7PBETG2OQGHMLGGDMW6BDE9BMOOBWQR8PJB1H8S7DWK1P9I7OWHEDVKIXR7HYIH?type=summary&agentView=true&fqdn=summary-page",
     "evidenceDir": "kane/03-referee",
