@@ -139,6 +139,18 @@ export function packRecording(stateDir: string, outDir: string, runIds: string[]
   return { runs: runs.length, files: fileCount };
 }
 
+/** Kane's measured detection over the whole chaos library (`hydra chaos calibrate`), if it was run. */
+function calibrationSummary(): { caught: number; total: number } | null {
+  const file = resolve("chaos", "calibration.json");
+  if (!existsSync(file)) return null;
+  try {
+    const rows = (JSON.parse(readFileSync(file, "utf8")) as { rows?: Array<{ kane?: string }> }).rows ?? [];
+    return rows.length ? { caught: rows.filter((r) => r.kane === "caught").length, total: rows.length } : null;
+  } catch {
+    return null;
+  }
+}
+
 export function exportArena(stateDir: string, outDir: string, opts: { runIds?: string[] } = {}): { runs: number; files: number } {
   removeTree(outDir);
   ensureDir(outDir);
@@ -187,7 +199,9 @@ export function exportArena(stateDir: string, outDir: string, opts: { runIds?: s
       startedAt: r.startedAt,
       durationMs: r.durationMs,
       rounds: r.rounds.length,
+      holdoutFailures: r.metrics?.holdoutFailures ?? 0,
     })),
+    calibration: calibrationSummary(),
   });
   writeFileSync(join(outDir, ".nojekyll"), "");
   return { runs: runs.length, files: fileCount };
