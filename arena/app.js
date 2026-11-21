@@ -179,29 +179,39 @@
     const tiles = $("tiles");
     tiles.replaceChildren();
     s.tiles.forEach((t, i) => {
-      if (i > 0) tiles.append(el("span", { class: "arrow", "aria-hidden": "true" }, "→"));
       const clickable = Boolean(t.kane || t.diff);
-      tiles.append(
-        el(
-          clickable ? "button" : "div",
-          {
-            class: `tile ${t.cls}${clickable ? " clickable" : ""}${selectedTile === t.id ? " selected" : ""}`,
-            role: "listitem",
-            type: clickable ? "button" : null,
-            onclick: clickable ? () => { selectedTile = t.id; render(); } : null,
-          },
-          el("span", { class: "t-kind", text: t.kind }),
-          el("span", { class: "t-main", text: t.main }),
-          t.sub ? el("span", { class: "t-sub", text: t.sub }) : null,
-        ),
+      const selected = selectedTile === t.id;
+      const tile = el(
+        clickable ? "button" : "div",
+        {
+          class: `tile ${t.cls}${clickable ? " clickable" : ""}${selected ? " selected" : ""}`,
+          type: clickable ? "button" : null,
+          "aria-pressed": clickable ? String(selected) : null,
+          onclick: clickable ? () => { selectedTile = t.id; render(); } : null,
+        },
+        el("span", { class: "t-kind", text: t.kind }),
+        el("span", { class: "t-main", text: t.main }),
+        t.sub ? el("span", { class: "t-sub", text: t.sub }) : null,
       );
+      tiles.append(el("li", {}, i > 0 ? el("span", { class: "arrow", "aria-hidden": "true" }, "→") : null, tile));
     });
 
+    announce(s);
     renderKane();
     renderDiff();
     renderChaos();
     renderTimeline();
     $("clock").textContent = s.events.length ? `t+${fmtMs(s.t)}` : "";
+  }
+
+  let lastAnnounced = "";
+  function announce(s) {
+    const label = { healed: "Healed and deployed", miss: "Miss logged", aborted: "Aborted", rejected: "Rejected by the deploy gate" }[s.status];
+    const msg = s.status ? `${label || s.status}. ${s.reason || ""}` : s.phase ? `Phase: ${s.phase.toLowerCase()}` : "";
+    if (msg && msg !== lastAnnounced) {
+      lastAnnounced = msg;
+      $("live-region").textContent = msg;
+    }
   }
 
   function selectedKane() {
@@ -214,8 +224,10 @@
   let lastVideo = null;
   // `hydra video` renders videos after the run, so they live in run.json, not in kane_end events.
   let videoByLabel = {};
+  let captions = {};
   function indexVideos(run) {
     videoByLabel = {};
+    captions = run.captions || {};
     const ks = [...(run.baseline || []), ...(run.referee ? [run.referee.kane] : []), ...(run.rounds || []).flatMap((h) => h.verify || [])];
     for (const k of ks) if (k && k.video) videoByLabel[k.label] = k.video;
   }
@@ -231,6 +243,11 @@
     if (!k) {
       pill.textContent = "—";
       pill.className = "pill";
+      if (lastVideo !== null || !video.getAttribute("src")) {
+        lastVideo = null;
+        empty.hidden = false;
+        empty.textContent = "No Kane run yet. Kane starts with two baseline passes.";
+      }
       return;
     }
     pill.textContent = k.verdict === "passed" ? "PASS · exit 0" : k.verdict === "failed" ? "FAIL · exit 1" : `INFRA · ${k.verdict}`;
@@ -239,7 +256,7 @@
     if (src !== lastVideo) {
       lastVideo = src;
       if (src) {
-        video.src = src;
+        video.src = `${src}#t=2.3`;
         empty.hidden = true;
       } else {
         video.removeAttribute("src");
@@ -259,7 +276,8 @@
     row("Fresh run", k.fresh ? "yes (no cached replay)" : "no");
     for (const shot of (k.screenshots || []).slice(-6)) {
       const href = api.file(currentRun, shot);
-      shots.append(el("a", { href, target: "_blank", rel: "noopener" }, el("img", { src: href, alt: `Kane screenshot ${shot.split("/").pop()}`, loading: "lazy" })));
+      const caption = captions[shot] || `Kane screenshot, ${k.label}`;
+      shots.append(el("a", { href, target: "_blank", rel: "noopener", title: caption }, el("img", { src: href, alt: caption, loading: "lazy" })));
     }
   }
 
@@ -285,10 +303,19 @@
     const d = sel ? sel.diff : state.lastDiff;
     const meta = $("diff-meta");
     if (!d) {
-      $("diff").replaceChildren(el("span", { class: "muted", text: "No patch yet." }));
+      const why = state.status === "rejected"
+        ? `No patch shipped. ${state.reason || "The deploy gate rejected the round."}`
+        : state.status === "miss"
+          ? "No patch. Kane passed the run, so the builder was never asked to heal."
+          : state.status
+            ? `No patch. ${state.reason || ""}`
+            : "The builder has not patched yet. Waiting for the heal phase.";
+      $("diff").replaceChildren(el("span", { class: "muted", text: why }));
+      $("diff").setAttribute("aria-label", "Builder patch: none");
       meta.textContent = "";
       return;
     }
+    $("diff").setAttribute("aria-label", `Patch diff for ${d.files.join(", ") || "no files"}, round ${d.round}`);
     renderPatch($("diff"), d.patch);
     const b = state.builder[d.round];
     meta.textContent = `round ${d.round} · ${d.files.join(", ") || "no files"}${b ? ` · ${tokenLabel(b)}` : ""}${d.reverted && d.reverted.length ? ` · reverted: ${d.reverted.join(", ")}` : ""}`;
@@ -296,9 +323,9 @@
 
   function renderChaos() {
     const b = state.bug;
-    $("chaos-class").textContent = b ? (b.surface ? `${b.bugClass} · ${b.surface}` : b.bugClass) : "—";
+    $("chaos-class").textContent = b ? (b.surface && b.surface !== b.bugClass ? `${b.bugClass} · ${b.surface}` : b.bugClass) : "—";
     $("chaos-class").className = `pill${b ? " warn" : ""}`;
-    $("chaos-desc").textContent = b ? `${b.title}: ${b.description} (source: ${b.source}; Kane hypothesis: ${b.kaneHypothesis})` : "No bug injected yet.";
+    $("chaos-desc").textContent = b ? `${b.title}: ${b.description} (source: ${b.source}; Kane hypothesis: ${b.kaneHypothesis})` : "No bug injected yet. Chaos runs after two clean baseline passes.";
     renderPatch($("chaos-diff"), state.chaosDiff);
 
     const gt = $("gt");
