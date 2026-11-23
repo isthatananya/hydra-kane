@@ -1,15 +1,39 @@
 # Hydra
 
-A verification loop for AI coding agents: **a builder ships, a chaos agent breaks it, Kane CLI referees in a real browser.**
-Nothing deploys until Kane passes, and Kane's failure evidence is the only thing the builder sees when it heals.
+**A proving ground for AI coding agents.** A builder ships an app, a chaos agent secretly breaks it, and
+[Kane CLI](https://www.npmjs.com/package/@testmuai/kane-cli) referees in a real browser. Nothing deploys until Kane
+passes, and Kane's failure evidence is the only thing the builder sees when it heals.
+
+**Live:** [Find the bug before Kane](https://hydra-kane.vercel.app/play.html) (three live shops, one hidden bug each) ·
+[Leaderboard](https://hydra-kane.vercel.app/board.html) · [Every run, replayable](https://hydra-kane.vercel.app/)
+
+Because Hydra plants the bug itself, it knows the answer key. That lets it score both sides, which a test run on
+its own cannot:
+
+- **Kane:** what it caught and what it missed. Measured: **9 of 12** chaos bugs caught, and every miss explained.
+- **The coding agents:** who heals, in how many rounds, at what token and Kane-credit cost. Two of the builders are
+  built to cheat (one edits Kane's test, one hardcodes the expected totals), and both are caught.
 
 ```
-BUILD → BASELINE (Kane ×2) → CHAOS (1 hidden bug) → REFEREE (Kane)
+BUILD → BASELINE (Kane ×2) → CHAOS (1 hidden bug) → REFEREE (Kane, confirmed by a 2nd run; a 3rd breaks a tie)
                                                       ├─ pass   → MISS (logged, escalated)
                                                       ├─ exit 1 → CATCH → HEAL (prompt = Kane evidence only)
                                                       └─ exit 2 → infra error, retried, never sent to the builder
 HEAL → VERIFY (fresh Kane ×2 + hidden holdout) → DEPLOY gate     (max 5 heal rounds)
 ```
+
+## For judges
+
+| Criterion | Where to check it |
+|---|---|
+| Try it in 30 seconds | [Find the bug before Kane](https://hydra-kane.vercel.app/play.html): the same bugs Hydra plants, live, scored against Kane's real recorded verdicts and times |
+| Works end to end | Six recorded runs with real Kane CLI and real Claude Code / opencode, each a [replayable match report](https://hydra-kane.vercel.app/). Locally: `node bin/hydra.js run --seed 7` |
+| Kane caught something | [Kane catches the wrong-total bug](https://hydra-kane.vercel.app/?run=20261119-003757-s7-claude#moment=catch), then [a state bug](https://hydra-kane.vercel.app/?run=20261119-140125-s12-claude#moment=catch) only visible after a remove click |
+| Kane and the agent talk | The heal prompt is built only from Kane's evidence: summary, failing step, screenshots, logs, ShareLink ([adapter.ts](src/builder/adapter.ts)). A test proves it never leaks the bug, its diff or the hidden holdout ([loop-parts.test.mjs](test/loop-parts.test.mjs)) |
+| Closed loop, verified | A fix ships only after 2 fresh Kane passes, a hidden holdout and a gate that re-hashes specs and source: [the proof](https://hydra-kane.vercel.app/?run=20261119-140125-s12-claude#moment=proof) |
+| The agent cannot cheat | [The cheater edits Kane's test: rejected](https://hydra-kane.vercel.app/?run=20261119-010607-s7-cheater#moment=cheat). [The hardcoder fools the visible test twice, fails the hidden holdout](https://hydra-kane.vercel.app/?run=20261119-014645-s7-hardcoder#moment=gate) |
+| Honest about Kane | [Kane's catch map](https://hydra-kane.vercel.app/board.html): 3 misses out of 12, each explained. [A recorded miss](https://hydra-kane.vercel.app/?run=20261119-013112-s14-claude#moment=miss), logged instead of hidden |
+| Tested without credits | `npm test` (25 tests) and `npm run test:loop`: the whole loop with real builds and a stand-in referee, run in [CI](.github/workflows/ci.yml) on every push |
 
 ## Quick start
 
@@ -47,7 +71,7 @@ Same seed, two builders (`hydra stats`):
 
 A heal costs about 6 Kane runs (≈280 credits, no infra retries) and about 10 minutes from injection to green.
 
-**Browse the runs:** [isthatananya.github.io/hydra-kane/docs](https://isthatananya.github.io/hydra-kane/docs/) is a static arena exported to
+**Browse the runs:** [hydra-kane.vercel.app](https://hydra-kane.vercel.app/) (mirror: [GitHub Pages](https://isthatananya.github.io/hydra-kane/docs/)) is a static arena exported to
 `docs/` with `hydra export-arena`, so it needs no backend and no Kane.
 
 ### Math bugs vs state bugs
@@ -78,7 +102,7 @@ builder Kane's raw evidence lines, not just the summary.
 
 | Command | What it does |
 |---|---|
-| `hydra run --seed N [--builder claude] [--bug id] [--mutator] [--escalate]` | Full loop. Exit 0 healed, 1 aborted/rejected, 2 infra/config, 3 MISS |
+| `hydra run --seed N [--builder claude] [--bug id] [--mutator] [--escalate] [--no-confirm]` | Full loop. Exit 0 healed, 1 aborted/rejected, 2 infra/config, 3 MISS |
 | `hydra replay <seed>` / `hydra demo --replay` | Replay a recorded run in the arena from the ledger and stored evidence |
 | `hydra arena` / `hydra export-arena -o docs` | Live spectator view (SSE) / static export for a public URL (GitHub Pages) |
 | `hydra video --run <id...>` | Render a WebM per Kane run (referee, first verify, holdout) from Kane's step screenshots, since Kane saves no local video |
@@ -132,11 +156,53 @@ Two deliberately cheating builders (`cheater`, `hardcoder`) ship in the config t
 A builder is any shell command template. The heal prompt goes to it on stdin, and it is built only from Kane's summary,
 failing step, logs, screenshot paths and ShareLink.
 
+## Confirmed verdicts
+
+Kane is non-deterministic, so the run that decides CATCH or MISS is never trusted alone. The referee runs twice; if the
+two runs disagree, a third decides, and the builder gets the evidence of a run that agrees with the majority. The
+arena shows the vote ("confirmed 2 of 3"). Deployment has its own confirmation: two fresh main-flow passes plus the
+hidden holdout. `--no-confirm` saves one or two Kane runs per loop. The six recorded runs predate this and used a
+single referee run.
+
+## Tests
+
+```sh
+npm test            # 25 unit tests: chaos library, anti-cheat, spec lock, deploy gate, heal-prompt leaks,
+                    # Kane exit codes → verdicts, config, export path scrubbing, stats over the recordings
+npm run test:loop   # the whole loop, end to end, ~3 minutes, no Kane credits
+```
+
+`test:loop` runs the real orchestrator: it builds and boots the real app, plants the real `wrong-total` bug and calls a
+stand-in referee ([fake-kane.mjs](test/fixtures/fake-kane.mjs)) that reads the cart, coupon and expected totals from
+the plain-English spec and checks them against the running app over HTTP. It covers an honest heal that deploys, a
+flaky referee run that gets outvoted, the spec-editing cheater and the hardcoder. CI runs both suites on every push.
+
+## The live challenge
+
+[`scripts/build-playground.mjs`](scripts/build-playground.mjs) copies the target app and applies one library bug
+with the same edits `hydra run` uses: `stale-cart`, `validation-bypass` (a bug Kane missed) and `wrong-total`. Each
+copy is its own Vercel project. The [challenge page](arena/play.html) compares a player's answer and time with Kane's
+recorded verdict and time on the same bug.
+
+## Limits
+
+- **One app.** All recorded runs use the bundled checkout. The chaos library is written against it, so a new app
+  needs its own bugs (or the `--mutator`, which lets an LLM write one and validates it with the oracle).
+- **Small sample.** The leaderboard has 6 recorded runs. It shows how Hydra scores agents, not a verdict on them.
+- **Kane misses bugs off its path.** All three misses are behaviours the main flow never exercises (a bad email, a
+  double click, a fixed-amount coupon). The holdout and the spec agent narrow that gap; they do not close it.
+- **The loop test's referee is a stand-in.** It checks prices over HTTP, not a browser, so it proves the loop's
+  logic (gate, anti-cheat, confirmation, prompts), not Kane's detection. Kane's detection is measured separately
+  with `hydra chaos calibrate`.
+- **Cost.** A healed run is about 6 Kane runs (≈280 credits) and 10 minutes; confirmation adds one or two runs.
+
 ## Development
 
 ```sh
 npm run typecheck
-npm test          # builds, then runs node --test on test/
+npm test
+npm run test:loop
+node bin/hydra.js export-arena --state demo -o docs   # re-publish the static arena
 ```
 
 ## License
