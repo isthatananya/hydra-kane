@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find the bug before Kane · Hydra Arena</title>
+  <meta name="description" content="Three live shops, one hidden bug each. Kane CLI got the same shop and the same instructions. Can you beat it?" />
+  <meta property="og:title" content="Find the bug before Kane" />
+  <meta property="og:description" content="Three live shops, one hidden bug each. Kane CLI got the same shop and the same instructions. Can you beat it?" />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316181c'/%3E%3Cpath d='M11 7v18M21 7v18M11 16h10' stroke='%23eef0f3' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E" />
+  <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    try { const t = localStorage.getItem("hydra-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the challenge</a>
+  <header class="top">
+    <div class="wrap top-row">
+      <a class="wordmark" href="./" aria-label="Hydra Arena home"><span class="wm-hydra">HYDRA</span><span class="wm-arena">Arena</span></a>
+      <nav class="top-nav" aria-label="Sections">
+        <a href="./">Runs</a>
+        <a href="play.html" aria-current="page">Play</a>
+        <a href="board.html">Leaderboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="home-hero">
+      <div class="wrap">
+        <p class="label">The challenge</p>
+        <h1 class="home-title">Find the bug<br />before <span class="kane-word">Kane</span>.</h1>
+        <p class="home-lead measure">Each shop below is live and has one real bug, planted by Hydra's chaos agent. Kane CLI got the same shop and the same checkout instructions, and its result is on record. Click around, find what's broken, and see whether you beat it.</p>
+      </div>
+    </section>
+
+    <section class="wrap band" aria-labelledby="rounds-h">
+      <div class="band-head">
+        <h2 id="rounds-h" class="section-h">Pick a shop</h2>
+        <p id="score" class="ink-2"></p>
+      </div>
+      <div class="round-tabs" role="tablist" aria-label="Shops" id="round-tabs"></div>
+
+      <div class="play-grid" id="round" role="tabpanel">
+        <div class="shop-frame">
+          <div class="frame-bar">
+            <span class="mono ink-2" id="shop-url"></span>
+            <a id="shop-open" class="link-btn" target="_blank" rel="noopener noreferrer">Open in a new tab</a>
+          </div>
+          <iframe id="shop" title="Live shop with one hidden bug" loading="lazy"></iframe>
+        </div>
+
+        <div class="play-side">
+          <div class="clock-card">
+            <p class="label">Your time</p>
+            <p id="timer" class="timer mono" aria-live="off">0:00</p>
+            <button id="start" class="watch-btn" type="button">Start the clock</button>
+          </div>
+
+          <details class="task" open>
+            <summary>The task Kane was given</summary>
+            <ol id="task-steps"></ol>
+          </details>
+
+          <form id="guess" class="guess" hidden>
+            <fieldset>
+              <legend class="label">What's broken?</legend>
+              <div id="options"></div>
+            </fieldset>
+            <button class="watch-btn" type="submit">Lock in my answer</button>
+          </form>
+
+          <div id="reveal" class="reveal" hidden aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap band" aria-labelledby="how-h">
+      <h2 id="how-h" class="section-h">How this works</h2>
+      <p class="measure ink-2">These are the same bugs Hydra injects in its runs, applied to the same checkout app with the same code edits. Kane's verdicts and times come from the recorded runs in this arena, so every comparison is against what Kane really did. When Kane catches a bug, Hydra hands its evidence to a coding agent, which has to fix it before anything ships. <a href="./">Watch those runs</a>.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-row">
+      <p>Kane CLI is the only verifier · the shops are live, nothing is real or charged</p>
+      <p><a href="https://github.com/isthatananya/hydra-kane">Repository</a></p>
+    </div>
+  </footer>
+  <div id="live-region" class="sr" aria-live="polite"></div>
+  <script src="play.js"></script>
+</body>
+</html>
