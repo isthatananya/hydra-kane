@@ -92,12 +92,14 @@ program
   .option("--escalate", "after a heal, spawn two harder compound bugs (FR13)")
   .option("--spec-agent", "on a MISS, let an agent write a Kane flow that catches the bug, then heal from it (FR14)")
   .option("--no-ground-truth", "skip the scripted ground-truth oracle")
+  .option("--no-confirm", "trust a single referee run instead of confirming it (saves 1-2 Kane runs)")
   .option("--no-arena", "do not start the live arena")
   .option("--arena-port <port>", "arena port", int("arena-port"))
   .option("--keep-arena", "keep the arena running after the loop ends")
   .action(async (o, cmd: Command) => {
     const cfg = cfgFrom(cmd);
     if (o.specAgent) cfg.specAgent.enabled = true;
+    if (o.confirm === false) cfg.kane.confirm = false;
     const builder = o.builder ?? cfg.defaultBuilder;
     if (o.bug && !findBug(o.bug)) throw new Error(`Unknown bug "${o.bug}". See: hydra chaos list`);
     const auth = kaneAuthStatus(cfg);

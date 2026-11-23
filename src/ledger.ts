@@ -79,7 +79,8 @@ export type RunRecord = {
   chaosDiff: string | null;
   specs: Array<{ id: string; role: string; path: string; hash: string }>;
   baseline: KaneRef[];
-  referee: { kane: KaneRef; verdict: "CATCH" | "MISS" } | null;
+  /** `votes`: every referee run's verdict when the verdict was confirmed (kane.confirm). */
+  referee: { kane: KaneRef; verdict: "CATCH" | "MISS"; votes?: Array<KaneRef["verdict"]> } | null;
   specAgent: { attempted: boolean; spec: string | null; caught: boolean; kane: KaneRef | null } | null;
   rounds: HealRound[];
   gate: { decision: "promote" | "reject"; reasons: string[]; checkedAt: string } | null;

@@ -131,6 +131,26 @@ export async function runLoop(cfg: HydraConfig, opts: LoopOptions): Promise<Loop
     throw new Abort("infra-error", `Kane failed with infra errors ${cfg.kane.retries + 1} times on ${label}`);
   }
 
+  /**
+   * The referee decides CATCH or MISS, so one Kane run is not trusted on its own: a second run
+   * confirms it, and if the two disagree a third decides. Returns the majority's run (its
+   * evidence is what the builder gets) and every vote.
+   */
+  async function confirmedReferee(spec: Spec): Promise<{ result: KaneResult; ref: KaneRef; votes: Array<KaneRef["verdict"]> }> {
+    const first = await kane("referee", spec, "main");
+    if (!cfg.kane.confirm) return { ...first, votes: [first.ref.verdict] };
+    const second = await kane("referee-confirm", spec, "main");
+    const runs = [first, second];
+    if (second.result.verdict !== first.result.verdict) runs.push(await kane("referee-decide", spec, "main"));
+    const fails = runs.filter((r) => r.result.verdict === "failed").length;
+    const majority = fails * 2 > runs.length ? "failed" : "passed";
+    const pick = runs.find((r) => r.result.verdict === majority) ?? first;
+    const votes = runs.map((r) => r.ref.verdict);
+    rec.event("confirm", { label: "referee", votes, verdict: majority });
+    log.info(`referee confirmed: ${votes.join(", ")} → ${majority}`);
+    return { ...pick, votes };
+  }
+
   async function groundTruth(phase: "baseline" | "chaos" | "final"): Promise<GroundTruthReport | null> {
     if (!useGroundTruth) return null;
     const report = await runGroundTruth(app.url, () => app.reset());
@@ -223,10 +243,10 @@ export async function runLoop(cfg: HydraConfig, opts: LoopOptions): Promise<Loop
 
     // ── REFEREE ─────────────────────────────────────────────────────────────
     phase("REFEREE");
-    const referee = await kane("referee", mainSpec, "main");
+    const referee = await confirmedReferee(mainSpec);
     let lastFail: { result: KaneResult; flow: "main" | "holdout" } | null = null;
     if (referee.result.verdict === "passed") {
-      R.referee = { kane: referee.ref, verdict: "MISS" };
+      R.referee = { kane: referee.ref, verdict: "MISS", votes: referee.votes };
       rec.event("verdict", { verdict: "MISS", bug: R.bug });
       log.step("REFEREE", `MISS — Kane passed with ${bug.id} present`);
       rec.save();
@@ -257,7 +277,7 @@ export async function runLoop(cfg: HydraConfig, opts: LoopOptions): Promise<Loop
       }
       if (!lastFail) throw new Abort("miss", `Kane did not catch ${bug.id}; logged as a MISS`);
     } else {
-      R.referee = { kane: referee.ref, verdict: "CATCH" };
+      R.referee = { kane: referee.ref, verdict: "CATCH", votes: referee.votes };
       rec.event("verdict", { verdict: "CATCH", bug: R.bug });
       log.step("REFEREE", `CATCH — Kane exit 1 on ${bug.id}`);
       lastFail = { result: referee.result, flow: "main" };

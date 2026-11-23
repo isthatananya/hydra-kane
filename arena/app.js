@@ -116,12 +116,12 @@
   function fresh() {
     return {
       phase: null, phases: [], kane: [], bug: null, chaosDiff: "", verdict: null, diffs: [], anticheat: [],
-      gates: [], deploy: null, status: null, reason: null, ground: {}, builder: {}, specAgent: null, t: 0, count: 0,
+      gates: [], confirm: null, deploy: null, status: null, reason: null, ground: {}, builder: {}, specAgent: null, t: 0, count: 0,
     };
   }
 
   function kindOf(ev) {
-    return ev.label.startsWith("baseline") ? "baseline" : ev.label === "referee" ? "referee" : ev.spec === "holdout" ? "holdout" : ev.spec === "generated" ? "spec-agent" : "verify";
+    return ev.label.startsWith("baseline") ? "baseline" : ev.label.startsWith("referee") ? "referee" : ev.spec === "holdout" ? "holdout" : ev.spec === "generated" ? "spec-agent" : "verify";
   }
 
   function reduce(s, ev) {
@@ -142,6 +142,7 @@
       case "anticheat": s.anticheat.push(ev); break;
       case "gate": s.gates.push(ev); break;
       case "deploy": s.deploy = ev; break;
+      case "confirm": s.confirm = ev; break;
       case "ground_truth": s.ground[ev.phase] = ev; break;
       case "spec_agent": s.specAgent = ev; break;
       case "run_end": s.status = ev.status; s.reason = ev.reason; break;
@@ -170,7 +171,12 @@
   // ── Key moments: the single source of outcome logic ─────────────────────
   function deriveMoments(s) {
     const out = [];
-    const referee = s.kane.find((k) => k.kind === "referee");
+    // With confirmed verdicts there are 2-3 referee runs; the moment shows one that agrees with the vote.
+    const referees = s.kane.filter((k) => k.kind === "referee");
+    const decided = s.confirm ? s.confirm.verdict : null;
+    const referee = (decided && referees.find((k) => k.verdict === decided)) || referees[0];
+    const votes = s.confirm ? s.confirm.votes : null;
+    const voteNote = votes && votes.length > 1 ? ` · confirmed ${votes.filter((v) => v === (decided || referee.verdict)).length} of ${votes.length}` : "";
     const tamper = s.anticheat.find((a) => a.kind === "spec-tamper");
     const reject = s.gates.find((g) => g.decision === "reject");
     const fix = [...s.diffs].reverse().find((d) => d.files && d.files.length);
@@ -179,7 +185,7 @@
     if (referee && referee.verdict === "failed") {
       out.push({
         id: "catch", label: "The catch", word: "FAIL", tone: "catch", mark: "fail",
-        meta: `Kane referee · exit 1 · ${fmtDur(referee.durationMs)}`,
+        meta: `Kane referee · exit 1 · ${fmtDur(referee.durationMs)}${voteNote}`,
         detail: evidenceLines(referee.summary)[0] || firstSentence(referee.summary),
         subject: { type: "kane", ev: referee }, t: referee.t, seq: referee.seq,
       });
@@ -187,7 +193,7 @@
       const failing = (s.ground.chaos && s.ground.chaos.failing) || [];
       out.push({
         id: "miss", label: "The miss", word: "PASS", tone: "catch", mark: "pass",
-        meta: `Kane referee · exit 0 · ${fmtDur(referee.durationMs)}`,
+        meta: `Kane referee · exit 0 · ${fmtDur(referee.durationMs)}${voteNote}`,
         detail: `Kane passed with the bug present.${failing.length ? ` The oracle failed: ${failing.join(", ")}.` : ""}`,
         subject: { type: "kane", ev: referee, miss: true }, t: referee.t, seq: referee.seq,
       });
@@ -740,7 +746,7 @@
   // ── Event log ────────────────────────────────────────────────────────────
   const LOG_GROUPS = {
     phase: ["phase", "run_start", "run_end"],
-    kane: ["kane_start", "kane_end", "kane_infra", "verdict"],
+    kane: ["kane_start", "kane_end", "kane_infra", "verdict", "confirm"],
     builder: ["heal_start", "builder_end", "diff", "build_start", "build_end", "round_end"],
     gate: ["gate", "anticheat", "deploy"],
     "ground truth": ["ground_truth", "chaos_applied", "spec_agent", "mutator"],
@@ -768,6 +774,7 @@
       case "round_end": return `round ${ev.round}: ${ev.outcome}`;
       case "gate": return `gate ${ev.decision}: ${(ev.reasons || []).join("; ")}`;
       case "deploy": return "deployed";
+      case "confirm": return `referee confirmed: ${(ev.votes || []).join(", ")} → ${ev.verdict}`;
       case "spec_agent": return `spec agent: ${ev.caught ? "a new flow catches the bug" : `no catch${ev.reason ? ` (${ev.reason})` : ""}`}`;
       case "mutator": return `mutator attempt ${ev.attempt}: ${ev.ok ? "valid bug" : ev.reason}`;
       case "run_end": return `${ev.status}: ${ev.reason || ""}`;

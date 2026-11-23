@@ -36,6 +36,11 @@ export type HydraConfig = {
     /** Hard cap on Kane runs per `hydra run` (cost control). */
     maxRunsPerLoop: number;
     extraArgs: string[];
+    /**
+     * Kane is non-deterministic. When true, the referee's verdict (which decides CATCH or MISS)
+     * is re-run; if the two runs disagree a third decides. Costs one or two extra Kane runs.
+     */
+    confirm: boolean;
   };
   heal: { maxRounds: number; includeBuildErrors: boolean };
   builders: Record<string, BuilderConfig>;
@@ -80,6 +85,7 @@ export const DEFAULTS: Omit<HydraConfig, "root"> = {
     retries: 2,
     maxRunsPerLoop: 30,
     extraArgs: [],
+    confirm: true,
   },
   heal: { maxRounds: 5, includeBuildErrors: true },
   builders: {
