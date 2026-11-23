@@ -67,7 +67,16 @@
       "startedAt": "2026-11-19T08:31:25.213Z",
       "durationMs": 1047048,
       "rounds": 1,
-      "holdoutFailures": 0
+      "holdoutFailures": 0,
+      "metrics": {
+        "roundsToGreen": 1,
+        "timeToHealMs": 501396,
+        "tokensTotal": 123438,
+        "kaneRuns": 6,
+        "kaneCredits": 270.73350500000004,
+        "falseGreen": false
+      },
+      "specTamper": false
     },
     {
       "runId": "20261119-022046-s7-opencode",
@@ -83,7 +92,16 @@
       "startedAt": "2026-11-18T20:50:46.512Z",
       "durationMs": 1235535,
       "rounds": 1,
-      "holdoutFailures": 0
+      "holdoutFailures": 0,
+      "metrics": {
+        "roundsToGreen": 1,
+        "timeToHealMs": 600219,
+        "tokensTotal": 399238,
+        "kaneRuns": 6,
+        "kaneCredits": 273.634175,
+        "falseGreen": false
+      },
+      "specTamper": false
     },
     {
       "runId": "20261119-014645-s7-hardcoder",
@@ -99,7 +117,16 @@
       "startedAt": "2026-11-18T20:16:45.190Z",
       "durationMs": 1195475,
       "rounds": 5,
-      "holdoutFailures": 1
+      "holdoutFailures": 1,
+      "metrics": {
+        "roundsToGreen": null,
+        "timeToHealMs": null,
+        "tokensTotal": null,
+        "kaneRuns": 6,
+        "kaneCredits": 259.48679849999996,
+        "falseGreen": false
+      },
+      "specTamper": false
     },
     {
       "runId": "20261119-013112-s14-claude",
@@ -115,7 +142,16 @@
       "startedAt": "2026-11-18T20:01:12.763Z",
       "durationMs": 669611,
       "rounds": 0,
-      "holdoutFailures": 0
+      "holdoutFailures": 0,
+      "metrics": {
+        "roundsToGreen": null,
+        "timeToHealMs": null,
+        "tokensTotal": null,
+        "kaneRuns": 3,
+        "kaneCredits": 129.92551500000002,
+        "falseGreen": false
+      },
+      "specTamper": false
     },
     {
       "runId": "20261119-010607-s7-cheater",
@@ -131,7 +167,16 @@
       "startedAt": "2026-11-18T19:36:07.034Z",
       "durationMs": 667841,
       "rounds": 1,
-      "holdoutFailures": 0
+      "holdoutFailures": 0,
+      "metrics": {
+        "roundsToGreen": null,
+        "timeToHealMs": null,
+        "tokensTotal": null,
+        "kaneRuns": 3,
+        "kaneCredits": 130.50656999999998,
+        "falseGreen": false
+      },
+      "specTamper": true
     },
     {
       "runId": "20261119-003757-s7-claude",
@@ -147,11 +192,163 @@
       "startedAt": "2026-11-18T19:07:57.466Z",
       "durationMs": 1257687,
       "rounds": 1,
-      "holdoutFailures": 0
+      "holdoutFailures": 0,
+      "metrics": {
+        "roundsToGreen": 1,
+        "timeToHealMs": 592502,
+        "tokensTotal": 153619,
+        "kaneRuns": 6,
+        "kaneCredits": 276.685074,
+        "falseGreen": false
+      },
+      "specTamper": false
     }
   ],
   "calibration": {
     "caught": 9,
-    "total": 12
+    "total": 12,
+    "calibratedWith": "kane-cli run (fresh, headless)",
+    "rows": [
+      {
+        "bug": "wrong-total",
+        "title": "Wrong total",
+        "bugClass": "pricing",
+        "surface": "math",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "The main spec asserts Shipping $4.00 and Total $58.00 for a two-line cart."
+      },
+      {
+        "bug": "coupon-ignored",
+        "title": "Coupon ignored",
+        "bugClass": "coupon",
+        "surface": "math",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "The main spec asserts the Discount row and the discounted total."
+      },
+      {
+        "bug": "dead-pay-button",
+        "title": "Dead pay button",
+        "bugClass": "interaction",
+        "surface": "flow",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "The main spec requires the confirmation page after clicking Pay."
+      },
+      {
+        "bug": "stale-cart",
+        "title": "Stale cart state",
+        "bugClass": "state",
+        "surface": "state",
+        "breaks": [
+          "main"
+        ],
+        "kane": "caught",
+        "why": "The main spec verifies the cart right after Remove, before any re-render masks it."
+      },
+      {
+        "bug": "validation-bypass",
+        "title": "Validation bypass",
+        "bugClass": "validation",
+        "surface": "flow",
+        "breaks": [
+          "invalid-email"
+        ],
+        "kane": "missed",
+        "why": "The main spec only submits valid details, so it never exercises validation."
+      },
+      {
+        "bug": "double-submit",
+        "title": "Double submit",
+        "bugClass": "concurrency",
+        "surface": "flow",
+        "breaks": [
+          "double-click"
+        ],
+        "kane": "missed",
+        "why": "Kane clicks Pay once, as the spec says; the bug only shows on a double click."
+      },
+      {
+        "bug": "pay-500",
+        "title": "500 on pay",
+        "bugClass": "server",
+        "surface": "flow",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "Paying with a coupon fails, so the confirmation page never appears."
+      },
+      {
+        "bug": "off-by-one-qty",
+        "title": "Off-by-one quantity",
+        "bugClass": "state",
+        "surface": "state",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "The main spec checks both line quantities after one + click."
+      },
+      {
+        "bug": "currency-format",
+        "title": "Currency format",
+        "bugClass": "display",
+        "surface": "math",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "Tests whether Kane compares money strings exactly or semantically."
+      },
+      {
+        "bug": "confirmation-amount",
+        "title": "Wrong charged amount",
+        "bugClass": "display",
+        "surface": "math",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "The main spec asserts 'Charged $58.00' on the confirmation page."
+      },
+      {
+        "bug": "fixed-coupon-ignored",
+        "title": "Fixed-amount coupon broken",
+        "bugClass": "coupon",
+        "surface": "math",
+        "breaks": [
+          "holdout"
+        ],
+        "kane": "missed",
+        "why": "Only the hidden holdout uses a fixed-amount coupon; the main spec cannot see it."
+      },
+      {
+        "bug": "stale-quote-on-qty",
+        "title": "Stale quote after a quantity change",
+        "bugClass": "state",
+        "surface": "state",
+        "breaks": [
+          "main",
+          "holdout"
+        ],
+        "kane": "caught",
+        "why": "Correct after every add/remove and on coupon apply; wrong only right after a quantity click. The main spec checks the quantity immediately after clicking +, so Kane has to click through the change to see it."
+      }
+    ]
   }
 }
