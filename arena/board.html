@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaderboard · Hydra Arena</title>
+  <meta name="description" content="Which AI coding agents heal real bugs, which ones cheat, and which bugs Kane CLI catches or misses. Every number comes from a recorded run." />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316181c'/%3E%3Cpath d='M11 7v18M21 7v18M11 16h10' stroke='%23eef0f3' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E" />
+  <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    try { const t = localStorage.getItem("hydra-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the leaderboard</a>
+  <header class="top">
+    <div class="wrap top-row">
+      <a class="wordmark" href="./" aria-label="Hydra Arena home"><span class="wm-hydra">HYDRA</span><span class="wm-arena">Arena</span></a>
+      <nav class="top-nav" aria-label="Sections">
+        <a href="./">Runs</a>
+        <a href="play.html">Play</a>
+        <a href="board.html" aria-current="page">Leaderboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="home-hero">
+      <div class="wrap">
+        <p class="label">Leaderboard</p>
+        <h1 class="home-title">Who heals.<br />Who cheats.<br />What <span class="kane-word">Kane</span> misses.</h1>
+        <p class="home-lead measure">Hydra knows exactly which bug it planted, so it can score both sides: the coding agents that have to fix the app, and Kane CLI, which has to catch the bug. Every number here comes from a recorded run you can replay.</p>
+      </div>
+    </section>
+
+    <section class="wrap band" aria-labelledby="builders-h">
+      <div class="band-head">
+        <h2 id="builders-h" class="section-h">Coding agents</h2>
+        <p id="builders-note" class="ink-2"></p>
+      </div>
+      <p class="measure ink-2">Each agent gets only Kane's evidence: what Kane saw, the failing step and screenshots. Never the diff, never the bug's name. A fix ships only after two fresh Kane passes and a hidden holdout test the agent never saw.</p>
+      <div class="table-wrap"><table id="builders" class="table board-table"></table></div>
+    </section>
+
+    <section class="wrap band" aria-labelledby="kane-h">
+      <div class="band-head">
+        <h2 id="kane-h" class="section-h">Kane's catch map</h2>
+        <p id="kane-note" class="ink-2"></p>
+      </div>
+      <p id="kane-lead" class="measure across-lead"></p>
+      <div class="catch-map" id="catch-map"></div>
+      <div class="ev-block measure">
+        <p class="label">How Hydra closes the gaps</p>
+        <ul class="plain-list">
+          <li><strong>Hidden holdout.</strong> A second Kane flow with a different coupon and quantity. It caught the hardcoder, whose fix passed the visible test twice.</li>
+          <li><strong>Misses are logged, never hidden.</strong> A miss is an outcome in the ledger, with the oracle's proof that the bug was there.</li>
+          <li><strong>Spec agent.</strong> After a miss, an agent can write a new Kane flow aimed at the part of the app the old one never touched.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap band" aria-labelledby="you-h">
+      <h2 id="you-h" class="section-h">Think you'd do better than Kane?</h2>
+      <p class="measure ink-2">Three of these bugs are live in real shops right now.</p>
+      <div class="hero-actions"><a class="watch-btn" href="play.html">Find the bug before Kane</a></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-row">
+      <p>Kane CLI is the only verifier · numbers come from recorded runs and <code>hydra chaos calibrate</code></p>
+      <p><a href="https://github.com/isthatananya/hydra-kane">Repository</a></p>
+    </div>
+  </footer>
+  <script src="board.js"></script>
+</body>
+</html>

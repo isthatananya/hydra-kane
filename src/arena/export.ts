@@ -4,6 +4,7 @@ import { dirname, join, resolve } from "node:path";
 import { aggregate, bugSurface, listRuns, readEvents, type RunRecord } from "../ledger.js";
 import { copyTree, ensureDir, removeTree, writeJsonAtomic } from "../util/fs.js";
 import { ARENA_UI_DIR } from "./server.js";
+import { findBug } from "../chaos/taxonomy.js";
 
 /** Fill in fields older recordings lack, so the published arena shows them. */
 function withSurface(r: RunRecord): RunRecord {
@@ -140,12 +141,26 @@ export function packRecording(stateDir: string, outDir: string, runIds: string[]
 }
 
 /** Kane's measured detection over the whole chaos library (`hydra chaos calibrate`), if it was run. */
-function calibrationSummary(): { caught: number; total: number } | null {
+type CalibrationRow = { bug: string; title: string; bugClass: string; surface: string; breaks: string[]; kane: string; why: string };
+
+function calibrationSummary(): { caught: number; total: number; calibratedWith?: string; rows: CalibrationRow[] } | null {
   const file = resolve("chaos", "calibration.json");
   if (!existsSync(file)) return null;
   try {
-    const rows = (JSON.parse(readFileSync(file, "utf8")) as { rows?: Array<{ kane?: string }> }).rows ?? [];
-    return rows.length ? { caught: rows.filter((r) => r.kane === "caught").length, total: rows.length } : null;
+    const data = JSON.parse(readFileSync(file, "utf8")) as { calibratedWith?: string; rows?: Array<{ bug: string; kane?: string }> };
+    const rows = (data.rows ?? []).map((r) => {
+      const b = findBug(r.bug);
+      return {
+        bug: r.bug,
+        title: b?.title ?? r.bug,
+        bugClass: b?.bugClass ?? "unknown",
+        surface: b?.surface ?? "unknown",
+        breaks: b?.breaks ?? [],
+        kane: r.kane ?? "unknown",
+        why: b?.rationale ?? "",
+      };
+    });
+    return rows.length ? { caught: rows.filter((r) => r.kane === "caught").length, total: rows.length, calibratedWith: data.calibratedWith, rows } : null;
   } catch {
     return null;
   }
@@ -201,6 +216,15 @@ export function exportArena(stateDir: string, outDir: string, opts: { runIds?: s
       durationMs: r.durationMs,
       rounds: r.rounds.length,
       holdoutFailures: r.metrics?.holdoutFailures ?? 0,
+      metrics: {
+        roundsToGreen: r.metrics?.roundsToGreen ?? null,
+        timeToHealMs: r.metrics?.timeToHealMs ?? null,
+        tokensTotal: r.metrics?.tokensTotal ?? null,
+        kaneRuns: r.metrics?.kaneRuns ?? null,
+        kaneCredits: r.metrics?.kaneCredits ?? null,
+        falseGreen: r.metrics?.falseGreen ?? false,
+      },
+      specTamper: r.rounds.some((h) => h.specIntegrity && h.specIntegrity !== "ok"),
     })),
     calibration: calibrationSummary(),
   });
