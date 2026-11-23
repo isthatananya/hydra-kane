@@ -17,6 +17,8 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - name: Whole loop with a stand-in Kane (real builds, no credits)
+        run: node --test --test-timeout=1800000 --test-concurrency=1 test/loop.e2e.mjs
       - name: Demo recording replays without Kane
         run: |
           node bin/hydra.js demo --port 4400 &

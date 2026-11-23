@@ -26,7 +26,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test \"test/**/*.test.mjs\"",
     "app:build": "npm run build --workspace target-app",
-    "app:start": "npm run start --workspace target-app"
+    "app:start": "npm run start --workspace target-app",
+    "test:loop": "npm run build && node --test --test-timeout=1800000 --test-concurrency=1 test/loop.e2e.mjs"
   },
   "keywords": [
     "kane-cli",

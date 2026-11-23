@@ -8,3 +8,4 @@ target-app/.next/
 .env.*
 .testmuai/
 playground/
+.hydra-loop-test/
