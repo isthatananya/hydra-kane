@@ -9,3 +9,4 @@ target-app/.next/
 .testmuai/
 playground/
 .hydra-loop-test/
+.vercel/

@@ -23,14 +23,20 @@ if (!(await exists(from))) {
 await mkdir(to, { recursive: true });
 await cp(from, to, { recursive: true });
 
+// The bug library. web/data/bugs.json is committed so a clean clone (Vercel's Git builds) has it;
+// it is refreshed from the compiled chaos library whenever dist/ exists locally.
+const committed = path.join(web, "data", "bugs.json");
 const taxonomy = path.join(repo, "dist", "chaos", "taxonomy.js");
 if (await exists(taxonomy)) {
   const { BUGS } = await import(pathToFileURL(taxonomy).href);
   const bugs = BUGS.map(({ id, title, bugClass, surface, description, edits, breaks, kaneHypothesis, rationale }) =>
     ({ id, title, bugClass, surface, description, edits, breaks, kaneHypothesis, rationale }));
-  await writeFile(path.join(to, "bugs.json"), JSON.stringify(bugs, null, 2));
-} else if (!(await exists(path.join(to, "bugs.json")))) {
-  console.error("sync-data: dist/chaos/taxonomy.js is missing. Run `npm run build` in the repo root first.");
+  await mkdir(path.dirname(committed), { recursive: true });
+  await writeFile(committed, JSON.stringify(bugs, null, 2) + "\n");
+}
+if (!(await exists(committed))) {
+  console.error("sync-data: web/data/bugs.json is missing. Run `npm run build` in the repo root first.");
   process.exit(1);
 }
+await cp(committed, path.join(to, "bugs.json"));
 console.log("sync-data: copied", path.relative(repo, from), "->", path.relative(repo, to));
