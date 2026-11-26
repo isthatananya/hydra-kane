@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { authConfigured } from "@/auth";
 import { AccountLink } from "./session";
 import { ButtonLink, Logo } from "./ui";
 
@@ -23,7 +24,7 @@ export function Header() {
             {n.label}
           </Link>
         ))}
-        <AccountLink />
+        <AccountLink enabled={authConfigured()} />
         <ButtonLink href="/run">Run a match</ButtonLink>
       </nav>
     </header>

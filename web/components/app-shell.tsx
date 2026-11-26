@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { authConfigured } from "@/auth";
 import { AccountLink } from "./session";
 import { Frame } from "./site";
 import { cx, Logo } from "./ui";
@@ -52,7 +53,7 @@ export function AppShell({ active, crumbs, aside, children }: { active: AppNavKe
             </nav>
             <div className="flex flex-wrap items-center gap-4">
               {aside}
-              <AccountLink className="text-[15px]" />
+              <AccountLink className="text-[15px]" enabled={authConfigured()} />
             </div>
           </div>
           <main>{children}</main>

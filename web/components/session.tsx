@@ -29,8 +29,9 @@ export function DevSignInButton({ callbackUrl }: { callbackUrl: string }) {
 }
 
 /** Header slot: "Sign in", or the signed-in GitHub avatar linking to the account page. */
-export function AccountLink({ className }: { className?: string }) {
+export function AccountLink({ className, enabled = true }: { className?: string; enabled?: boolean }) {
   const { data, status } = useSession();
+  if (!enabled) return null;
   if (status === "loading") return <span aria-hidden="true" className={cx("inline-block h-8 w-[60px]", className)} />;
   if (!data?.user) {
     return (

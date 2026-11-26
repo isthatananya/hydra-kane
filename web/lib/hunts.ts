@@ -42,6 +42,7 @@ const K = {
   queue: "hunts:queue",
   active: (uid: string) => `hunts:active:${uid}`,
   quota: (uid: string, day: string) => `hunts:quota:${uid}:${day}`,
+  total: (day: string) => `hunts:total:${day}`,
   seen: "runner:seen",
 };
 
@@ -52,6 +53,8 @@ const FINAL: HuntState[] = ["caught", "missed", "error"];
 
 export const huntsEnabled = () => kvMode !== "none" && Boolean(process.env.HYDRA_RUNNER_TOKEN);
 export const dailyLimit = () => Math.max(1, Number(process.env.HUNT_DAILY_LIMIT) || 1);
+/** A cap on all hunts per day, so open (no sign-in) hunts can't drain the Kane credits. */
+export const globalDailyLimit = () => Math.max(1, Number(process.env.HUNT_GLOBAL_DAILY_LIMIT) || 40);
 const unlimited = (login: string | null) =>
   !!login && (process.env.HUNT_UNLIMITED_LOGINS ?? "").split(",").map((s) => s.trim().toLowerCase()).includes(login.toLowerCase());
 const today = () => new Date().toISOString().slice(0, 10);
@@ -91,10 +94,17 @@ export async function createHunt(user: { id: string; login: string | null }, slo
   }
 
   const quotaKey = K.quota(user.id, today());
-  const [used] = await kv(["INCR", quotaKey], ["EXPIRE", quotaKey, 2 * DAY_SECONDS]);
-  if (Number(used) > dailyLimit() && !unlimited(user.login)) {
-    await kv1("DECR", quotaKey);
-    return { ok: false, status: 429, error: `You've used today's ${dailyLimit() === 1 ? "live hunt" : `${dailyLimit()} live hunts`}. It resets at midnight UTC.` };
+  const totalKey = K.total(today());
+  const [used, , total] = await kv(["INCR", quotaKey], ["EXPIRE", quotaKey, 2 * DAY_SECONDS], ["INCR", totalKey], ["EXPIRE", totalKey, 2 * DAY_SECONDS]);
+  if (!unlimited(user.login)) {
+    if (Number(total) > globalDailyLimit()) {
+      await kv(["DECR", quotaKey], ["DECR", totalKey]);
+      return { ok: false, status: 429, error: "Today's live hunts are all used up. They reset at midnight UTC. Recorded matches are always open." };
+    }
+    if (Number(used) > dailyLimit()) {
+      await kv(["DECR", quotaKey], ["DECR", totalKey]);
+      return { ok: false, status: 429, error: `You've used today's ${dailyLimit() === 1 ? "live hunt" : `${dailyLimit()} live hunts`}. It resets at midnight UTC.` };
+    }
   }
 
   const id = `${Date.now().toString(36)}-${randomBytes(4).toString("hex")}`;
@@ -122,7 +132,8 @@ export async function createHunt(user: { id: string; login: string | null }, slo
 }
 
 async function refund(h: Hunt): Promise<void> {
-  await kv(["DECR", K.quota(h.userId, new Date(h.createdAt).toISOString().slice(0, 10))], ["DEL", K.active(h.userId)]);
+  const day = new Date(h.createdAt).toISOString().slice(0, 10);
+  await kv(["DECR", K.quota(h.userId, day)], ["DECR", K.total(day)], ["DEL", K.active(h.userId)]);
 }
 
 /** Hunts whose runner vanished mid-run end as an error, and the judge gets the hunt back. */

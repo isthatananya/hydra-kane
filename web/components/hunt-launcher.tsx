@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button, ButtonLink, Card, cx } from "./ui";
+import { Button, Card, cx } from "./ui";
 
 export type HuntLauncherProps = { shops: { slot: string; label: string }[]; minutes: string; credits: number; dailyLimit: number };
 type Runner = { configured: boolean; online: boolean; queued: number };
@@ -110,34 +110,19 @@ export function HuntLauncher({ shops, minutes, credits, dailyLimit }: HuntLaunch
         </div>
         <div>
           <dt className="meta">Daily limit</dt>
-          <dd className="m-0 mt-1 text-[20px] font-medium">{dailyLimit} per account</dd>
+          <dd className="m-0 mt-1 text-[20px] font-medium">{dailyLimit} per person</dd>
         </div>
       </dl>
 
       <div className="mt-6 flex flex-col gap-3">
         <RunnerBadge runner={runner} />
         <div className="flex flex-wrap items-center gap-3">
-          {session.status === "loading" ? (
-            <Button size="lg" disabled>
-              Checking sign-in…
-            </Button>
-          ) : session.status === "authenticated" ? (
-            <>
-              <Button size="lg" onClick={start} disabled={busy || !runner?.online} aria-describedby="hunt-note">
-                {busy ? "Starting…" : "Start the hunt"}
-              </Button>
-              <span id="hunt-note" className="meta">
-                Signed in as {session.data.user.login ?? session.data.user.name}
-              </span>
-            </>
-          ) : (
-            <>
-              <ButtonLink href={`/signin?callbackUrl=${encodeURIComponent("/run?mode=live")}`} size="lg">
-                Sign in to run a hunt
-              </ButtonLink>
-              <span className="meta">Takes one click with GitHub.</span>
-            </>
-          )}
+          <Button size="lg" onClick={start} disabled={busy || !runner?.online}>
+            {busy ? "Starting…" : "Start the hunt"}
+          </Button>
+          <span className="meta">
+            {session.status === "authenticated" ? `Signed in as ${session.data.user.login ?? session.data.user.name}` : "No sign-in needed"}
+          </span>
         </div>
         {error && (
           <p role="alert" className="mono m-0 rounded-chip bg-chaos-tint px-3 py-2.5 text-[13px] text-chaos">
