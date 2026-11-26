@@ -1,0 +1,583 @@
+@import "tailwindcss";
+
+/* ── Tokens (HYDRA_UI.md §3). The only place colours, radii and motion are defined. ── */
+:root {
+  /* page and frame */
+  --page: #0c0a09;
+  --page-dot: #292524;
+  --frame: #141210;
+  --cell: #1a1816;
+  --inset: #232020;
+  --line: #2e2a27;
+
+  /* text */
+  --text: #f5f5f4;
+  --text-2: rgba(245, 245, 244, 0.72);
+  --muted: #a8a29e;
+  --faint: #57534e;
+  /* secondary copy on the one inverted (light) tile */
+  --on-light-2: #44403c;
+
+  /* roles: each colour has exactly one meaning */
+  --kane: #6e9bff;
+  --chaos: #ff6b3d;
+  --healed: #4ade80;
+  --gate: #fbbf24;
+  --kane-tint: rgba(110, 155, 255, 0.12);
+  --chaos-tint: rgba(255, 107, 61, 0.12);
+  --healed-tint: rgba(74, 222, 128, 0.12);
+  --gate-tint: rgba(251, 191, 36, 0.12);
+
+  /* glass */
+  --glass-bg: rgba(30, 28, 26, 0.52);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-line: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(44px) saturate(115%);
+  --glass-solid: rgba(30, 28, 26, 0.94);
+  --glass-field-border: rgba(255, 255, 255, 0.12);
+  --glass-field-bg: rgba(20, 18, 16, 0.6);
+  --glass-pill-border: rgba(255, 255, 255, 0.5);
+  --glass-pill-bg: rgba(20, 18, 16, 0.7);
+
+  /* radii */
+  --r-glass: 32px;
+  --r-card: 22px;
+  --r-field: 16px;
+  --r-inner: 14px;
+  --r-shot: 12px;
+  --r-toggle: 10px;
+  --r-btn: 11px;
+  --r-chip: 8px;
+  --r-pill: 999px;
+
+  /* layout */
+  --frame-max: 1440px;
+  --pad-x: 40px;
+  --section-y: 96px;
+
+  /* motion */
+  --dur: 200ms;
+  --dur-fast: 150ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (max-width: 639px) {
+  :root {
+    --pad-x: 20px;
+    --section-y: 64px;
+  }
+}
+
+/* Tailwind reads the tokens; components use these utilities, never raw hex. */
+@theme inline {
+  --color-page: var(--page);
+  --color-frame: var(--frame);
+  --color-cell: var(--cell);
+  --color-inset: var(--inset);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-on-light-2: var(--on-light-2);
+  --color-kane: var(--kane);
+  --color-chaos: var(--chaos);
+  --color-healed: var(--healed);
+  --color-gate: var(--gate);
+  --color-kane-tint: var(--kane-tint);
+  --color-chaos-tint: var(--chaos-tint);
+  --color-healed-tint: var(--healed-tint);
+  --color-gate-tint: var(--gate-tint);
+  --color-glass-line: var(--glass-line);
+
+  /* Named directly (next/font loads the faces) so missing glyphs fall back like the reference, not to a size-adjusted face. */
+  --font-sans: "Instrument Sans", sans-serif;
+  --font-mono: "Fragment Mono", monospace;
+
+  --radius-glass: var(--r-glass);
+  --radius-card: var(--r-card);
+  --radius-field: var(--r-field);
+  --radius-inner: var(--r-inner);
+  --radius-shot: var(--r-shot);
+  --radius-toggle: var(--r-toggle);
+  --radius-btn: var(--r-btn);
+  --radius-chip: var(--r-chip);
+  --radius-pill: var(--r-pill);
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 900px;
+  --breakpoint-lg: 1200px;
+
+  --ease-hydra: var(--ease);
+}
+
+@layer base {
+  /* The reference relies on browser-default line height; Tailwind's preflight would set 1.5. */
+  html,
+  :host {
+    line-height: normal;
+  }
+  body {
+    margin: 0;
+    background-color: var(--page);
+    background-image: radial-gradient(var(--page-dot) 1px, transparent 1px);
+    background-size: 10px 10px;
+    color: var(--text);
+    font-family: "Instrument Sans", sans-serif;
+    min-height: 100vh;
+    padding: 0 24px;
+  }
+  a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--kane);
+  }
+  .mono,
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: "Fragment Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  :focus-visible {
+    outline: 2px solid var(--kane);
+    outline-offset: 2px;
+  }
+  select option {
+    background: var(--cell);
+    color: var(--text);
+  }
+}
+
+@layer components {
+  /* ── Frame (§5) ── */
+  .frame {
+    max-width: var(--frame-max);
+    margin: 0 auto;
+    background: var(--frame);
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    min-height: 100vh;
+  }
+  .px-frame {
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+
+  /* ── Buttons (§6) ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: var(--r-btn);
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .btn-lg {
+    padding: 14px 22px;
+  }
+  .btn-primary,
+  .btn-primary:hover {
+    background: var(--text);
+    color: var(--frame);
+  }
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--text) 88%, var(--frame));
+  }
+  .btn-secondary {
+    background: var(--cell);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-weight: 400;
+  }
+  .btn-secondary.btn-lg {
+    padding: 13px 22px;
+  }
+  .btn-secondary:hover {
+    background: var(--inset);
+    color: var(--text);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* ── Type ── */
+  .eyebrow {
+    font-family: "Fragment Mono", monospace;
+    font-size: 14px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--kane);
+  }
+  .h2 {
+    font-size: 56px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .meta {
+    font-family: "Fragment Mono", monospace;
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 639px) {
+    .h2 {
+      font-size: 38px;
+      line-height: 1.05;
+    }
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--cell);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    overflow: hidden;
+  }
+
+  /* ── Glass (§7), hero panel and replay scoreboard only ── */
+  .glass {
+    border-radius: var(--r-glass);
+    overflow: hidden;
+    background: var(--glass-bg);
+    /* Literal on purpose: the CSS minifier drops the unprefixed property when the value is a var(). Keep in sync with --glass-blur. */
+    -webkit-backdrop-filter: blur(44px) saturate(115%);
+    backdrop-filter: blur(44px) saturate(115%);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 40px 80px rgba(0, 0, 0, 0.45);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background: var(--glass-solid);
+    }
+  }
+
+  /* ── Chrome shapes ── */
+  .chrome-sphere {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 32% 26%,
+      #ffffff 0,
+      #f0f0f0 6%,
+      #9a9a9a 18%,
+      #2b2b2b 40%,
+      #0e0e0e 55%,
+      #5c5c5c 72%,
+      #d8d8d8 86%,
+      #3a3a3a 100%
+    );
+    box-shadow: inset -10px -12px 24px rgba(0, 0, 0, 0.55);
+  }
+  .chrome-torus {
+    position: absolute;
+    background: conic-gradient(
+      from 200deg,
+      #0c0c0c,
+      #f4f4f4 8%,
+      #6a6a6a 16%,
+      #111111 28%,
+      #cfcfcf 40%,
+      #1a1a1a 52%,
+      #fafafa 60%,
+      #555555 72%,
+      #0e0e0e 84%,
+      #bdbdbd 92%,
+      #0c0c0c
+    );
+    -webkit-mask: radial-gradient(ellipse at center, transparent 46%, #000 48%, #000 68%, transparent 70%);
+    mask: radial-gradient(ellipse at center, transparent 46%, #000 48%, #000 68%, transparent 70%);
+  }
+
+  /* ── Redacted ── */
+  .redacted {
+    position: relative;
+    background: var(--text);
+    color: var(--text);
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .redacted[data-revealed="true"] {
+    background: transparent;
+    color: inherit;
+    animation: wipe var(--dur) var(--ease);
+  }
+  @keyframes wipe {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* ── Rows that link: background shift only ── */
+  .row-link {
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .row-link:hover {
+    background: var(--inset);
+  }
+
+  /* ── Bento: one column below 900px ── */
+  @media (max-width: 899px) {
+    .bento {
+      grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .bento > * {
+      grid-column: auto !important;
+      grid-row: auto !important;
+    }
+  }
+}
+
+/* ── Motion (§10) ── */
+@keyframes float-a {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  to {
+    translate: 6px -8px;
+    rotate: 1.5deg;
+  }
+}
+@keyframes float-b {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  to {
+    translate: -8px 6px;
+    rotate: -1deg;
+  }
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes bug-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 12px 2px var(--chaos);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes flash-kane {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  40% {
+    box-shadow: 0 0 0 4px var(--kane);
+  }
+}
+.float {
+  animation: var(--float-name, float-a) var(--float-dur, 12s) ease-in-out var(--float-delay, 0s) infinite alternate;
+}
+.hero-bar {
+  transform-origin: center;
+  animation: bar-grow 400ms var(--ease) both;
+}
+.hero-bar[data-bug="true"] {
+  animation:
+    bar-grow 400ms var(--ease) both,
+    bug-glow 200ms ease-out both;
+  animation-delay: var(--bar-delay), calc(var(--bar-delay) + 400ms);
+}
+.fade-in {
+  animation: fade-in 300ms var(--ease) both;
+}
+.row-in {
+  animation: row-in 150ms var(--ease) both;
+}
+.flash-kane {
+  animation: flash-kane 600ms var(--ease) 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Hero layout (§7, §11) ── */
+@layer components {
+  .hero {
+    padding: 96px 40px 128px;
+  }
+  .hero-copy {
+    padding: 72px 56px;
+  }
+  .hero-bars-col {
+    min-height: 420px;
+    padding: 40px 56px 40px 0;
+  }
+  .hero-bars {
+    gap: 3px;
+  }
+  .hero-bars > span {
+    flex: 0 0 2px;
+  }
+  .scrub-legend {
+    display: none;
+  }
+  @media (max-width: 639px) {
+    .scrub-labels {
+      display: none;
+    }
+    .scrub-legend {
+      display: flex;
+    }
+  }
+  .hero-h1 {
+    font-size: 64px;
+    line-height: 1.08;
+    letter-spacing: -0.05em;
+  }
+  .hero-label {
+    top: 110px;
+    left: 46%;
+  }
+  .hero-connector {
+    top: 139px;
+    left: calc(46% + 60px);
+  }
+  @media (max-width: 899px) {
+    .hero-glass {
+      border-radius: 24px;
+    }
+    .chrome > * {
+      scale: 0.6;
+    }
+    .chrome > .chrome-small {
+      display: none;
+    }
+    .hero-bars-col {
+      padding: 24px 56px 56px;
+    }
+    .hero-label {
+      top: 70px;
+      left: 56px;
+    }
+    .hero-connector {
+      top: 99px;
+      left: calc(56px + var(--bug-frac) * 110 * 5px);
+    }
+  }
+  @media (max-width: 639px) {
+    .hero {
+      padding: var(--section-y) var(--pad-x);
+    }
+    .hero-h1 {
+      font-size: 42px;
+      line-height: 1.1;
+    }
+    .hero-copy {
+      padding: 48px 24px 24px;
+    }
+    .hero-picker {
+      flex-wrap: wrap;
+    }
+    .hero-picker > label {
+      flex-basis: 100%;
+    }
+    .hero-picker > .btn {
+      flex: 1;
+    }
+    .hero-bars-col {
+      min-height: 228px;
+      padding: 72px 24px 40px;
+    }
+    .hero-bars {
+      gap: 1.2px;
+    }
+    .hero-bars > span {
+      flex-basis: 1px;
+    }
+    .hero-label {
+      top: 16px;
+      left: 24px;
+    }
+    .hero-connector {
+      top: 41px;
+      left: calc(24px + var(--bug-frac) * 110 * 2.2px);
+    }
+  }
+}
+
+@layer components {
+  .quote {
+    font-size: 34px;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+  .match-row {
+    grid-template-columns: 120px minmax(0, 1fr) 140px 100px;
+  }
+  @media (max-width: 899px) {
+    .match-row {
+      grid-template-columns: auto minmax(0, 1fr);
+      row-gap: 10px;
+    }
+    .match-row > :nth-child(3) {
+      grid-column: 1;
+    }
+  }
+  @media (max-width: 639px) {
+    .quote {
+      font-size: 26px;
+      line-height: 1.15;
+    }
+  }
+}
+
+/* ── Replay fits one viewport at 1440 × 900 ── */
+@layer components {
+  @media (min-width: 900px) {
+    .replay-top {
+      height: calc(100vh - 86px);
+      min-height: 640px;
+    }
+  }
+}
