@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CatchMap, FormGuide, FormLegend, MatchLog, PhaseScrubber } from "@/components/arena";
+import { BentoGlow } from "@/components/bento-glow";
 import { GodViewTile } from "@/components/god-view-tile";
 import { Hero } from "@/components/hero";
 import { SitePage } from "@/components/site";
@@ -147,6 +148,7 @@ export default async function Landing() {
             </>
           }
         />
+        <BentoGlow>
         <div className="bento grid auto-rows-[minmax(260px,auto)] grid-cols-4 gap-3 px-[var(--pad-x)] pt-6 pb-10">
           <GodViewTile del={diff?.del ?? ""} add={diff?.add ?? ""} file={diffFile} />
 
@@ -214,6 +216,7 @@ export default async function Landing() {
             <FormLegend />
           </Card>
         </div>
+        </BentoGlow>
       </section>
 
       {/* Quote */}
