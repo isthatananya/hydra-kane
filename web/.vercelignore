@@ -1,0 +1,3 @@
+# Upload public/data (gitignored, copied from ../docs/data) so the build has the recorded runs.
+node_modules
+.next
