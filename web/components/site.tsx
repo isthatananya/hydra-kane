@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { AccountLink } from "./session";
 import { ButtonLink, Logo } from "./ui";
 
 export const GITHUB_URL = "https://github.com/isthatananya/hydra-kane";
@@ -22,6 +23,7 @@ export function Header() {
             {n.label}
           </Link>
         ))}
+        <AccountLink />
         <ButtonLink href="/run">Run a match</ButtonLink>
       </nav>
     </header>

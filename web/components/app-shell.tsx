@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { AccountLink } from "./session";
 import { Frame } from "./site";
 import { cx, Logo } from "./ui";
 
@@ -49,7 +50,10 @@ export function AppShell({ active, crumbs, aside, children }: { active: AppNavKe
                 </span>
               ))}
             </nav>
-            {aside}
+            <div className="flex flex-wrap items-center gap-4">
+              {aside}
+              <AccountLink className="text-[15px]" />
+            </div>
           </div>
           <main>{children}</main>
         </div>

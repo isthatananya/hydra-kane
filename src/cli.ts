@@ -22,6 +22,7 @@ import { copyTree, ensureDir, readJsonOr, removeTree } from "./util/fs.js";
 import { c, log } from "./util/log.js";
 import { which } from "./util/proc.js";
 import { formatReport, runStopHook, verify } from "./verify.js";
+import { runWorker } from "./worker.js";
 
 const PKG_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = (JSON.parse(readFileSync(join(PKG_ROOT, "package.json"), "utf8")) as { version: string }).version;
@@ -218,6 +219,22 @@ program
     const cfg = cfgFrom(cmd);
     const r = exportArena(o.state ? resolve(o.state) : stateDir(cfg), resolve(o.out), { runIds: o.run });
     log.ok(`exported ${r.runs} run(s), ${r.files} evidence file(s) → ${resolve(o.out)}`);
+  });
+
+program
+  .command("worker")
+  .description("Run the Kane hunts judges queue on the Hydra site, with this machine's Kane login")
+  .option("--site <url>", "Hydra site that holds the queue", process.env.HYDRA_SITE ?? "https://hydra-kane.vercel.app")
+  .option("--once", "exit after one hunt")
+  .action(async (o: { site: string; once?: boolean }, cmd: Command) => {
+    const cfg = cfgFrom(cmd);
+    // From the environment, or from .hydra/runner-token (gitignored) so the worker starts with no flags.
+    const tokenFile = join(stateDir(cfg), "runner-token");
+    const token = process.env.HYDRA_RUNNER_TOKEN ?? (existsSync(tokenFile) ? readFileSync(tokenFile, "utf8").trim() : "");
+    if (!token) throw new Error(`Set HYDRA_RUNNER_TOKEN, or put the site's runner token in ${tokenFile}.`);
+    const auth = kaneAuthStatus(cfg);
+    if (!auth.ok) throw new Error(`Kane CLI is not ready: ${auth.detail}. Run: kane-cli login`);
+    await runWorker(cfg, { site: o.site, token, once: o.once });
   });
 
 program

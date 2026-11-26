@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, Fragment_Mono } from "next/font/google";
+import { Providers } from "@/components/session";
 import "./globals.css";
 
 const instrument = Instrument_Sans({
@@ -30,7 +31,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${instrument.variable} ${fragment.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

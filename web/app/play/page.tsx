@@ -4,16 +4,9 @@ import { SitePage } from "@/components/site";
 import { Eyebrow } from "@/components/ui";
 import { kaneEvidence } from "@/lib/arena";
 import { getLibrary, getRun } from "@/lib/data";
+import { SHOPS } from "@/lib/shops";
 
 export const metadata: Metadata = { title: "Find the bug before Kane" };
-
-// Each shop is the target app with one chaos bug applied (scripts/build-playground.mjs).
-// `run` is a recorded Hydra run on the same bug: Kane's verdict and time come from it.
-const SHOPS = [
-  { slot: "a", url: "https://hydra-shop-a.vercel.app/", bug: "stale-cart", run: "20261119-140125-s12-claude" },
-  { slot: "b", url: "https://hydra-shop-b.vercel.app/", bug: "validation-bypass", run: "20261119-013112-s14-claude" },
-  { slot: "c", url: "https://hydra-shop-c.vercel.app/", bug: "wrong-total", run: "20261119-003757-s7-claude" },
-] as const;
 
 export default async function Play() {
   const library = await getLibrary();
